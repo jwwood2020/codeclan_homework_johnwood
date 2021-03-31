@@ -8,11 +8,11 @@ Load in the dataset and have a look at it. What are the dimensions, variable typ
 ```{r}
 library(tidyverse)
 
-starbucks <- read_csv("data/starbucks_drinkMenu_expanded.csv")
+starbucks_drinks <- read_csv("data/starbucks_drinkMenu_expanded.csv")
 
-dim(starbucks)
-names(starbucks)
-class(starbucks)
+dim(starbucks_drinks)
+names(starbucks_drinks)
+class(starbucks_drinks)
 ```
 
 
@@ -21,7 +21,7 @@ Let’s first investigate the calories of different drinks. Select the variables
 
 
 ```{r}
-drink_calories <- select(starbucks, Beverage_category, Beverage, Beverage_prep, Calories)
+drink_calories <- select(starbucks_drinks, Beverage_category, Beverage, Beverage_prep, Calories)
 drink_calories <- filter(drink_calories, !is.na(Calories))
 
 drink_calories
@@ -42,12 +42,15 @@ drink_calories
 Summarise the mean number of calories in each beverage_category. Which 3 drinks have the most calories? Which 3 drinks have the least? Write a small summary of your findings
 
 ```{r}
+
+#ambiguity over the definition of 'drinks' - is this beverage_category or beverage? I've chosen to go with beverage
+
 drink_calories <- arrange(drink_calories, Calories)
 head(drink_calories, 10)
 tail(drink_calories, 10)
 
-drinks_grouped <- group_by(drink_calories, Beverage_category)
-summarise(drinks_grouped, mean(Calories))
+drinks_bev_category <- group_by(drink_calories, Beverage_category)
+summarise(drinks_bev_category, mean(Calories))
 ```
 
 The results show that the three drinks (variable = Beverage) with the lowest Calories are Tazo Tea, Brewed Coffee and Espresso.
@@ -59,8 +62,8 @@ Question 5
 Let’s look at this a different way. What is the average number of calories in each Beverage_prep type?
 
 ```{r}
-drinks_grouped <- group_by(drink_calories, Beverage_prep)
-summarise(drinks_grouped, mean(Calories))
+drinks_bev_prep <- group_by(drink_calories, Beverage_prep)
+summarise(drinks_bev_prep, mean(Calories))
 ```
 
 
@@ -71,8 +74,9 @@ Hint: to answer this, you’ll have to first figure out what the average calorie
 
 ```{r}
 drink_calories <- mutate(drink_calories, mean_calories = mean(Calories))
-dinks_grouped <- group_by(drink_calories, Beverage_prep)
-filter(drinks_grouped, Calories > mean_calories)
+drinks_bev_prep <- group_by(drink_calories, Beverage_prep)
+drinks_bev_prep <- filter(drinks_bev_prep, Calories > mean_calories)
+drinks_bev_prep
 ```
 
 
@@ -80,7 +84,9 @@ filter(drinks_grouped, Calories > mean_calories)
 Which is the best type of coffee drink to get if you’re worried about consuming too many calories?
 
 ```{r}
-
+drinks_coffee <- filter(drink_calories, Beverage_category %in% c("Classic Espresso Drinks", "Coffee", "Frappuccino® Blended Coffee", "Frappuccino® Blended Crème", "Frappuccino® Light Blended Coffee"))
+arrange(drinks_coffee, Calories)
+head(drinks_coffee, 5)
 ```
 
 
