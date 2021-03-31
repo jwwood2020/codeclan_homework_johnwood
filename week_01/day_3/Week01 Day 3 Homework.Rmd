@@ -1,0 +1,106 @@
+---
+title: "Week 01 Day 3 Homework"
+output: html_notebook
+---
+
+```{r}
+
+library(tidyverse)
+
+
+movies_data <- read_csv("data/movies.csv")
+
+movies_data
+```
+
+
+Question 2
+```{r}
+movies_selected <-movies_data %>% 
+ select(title, runtime, budget)
+movies_selected
+```
+
+
+Question 3
+```{r}
+movies_selected %>%
+  select(everything()) %>% 
+  summarise(count = sum(is.na(.)))
+```
+
+Question 4
+```{r}
+movies_selected %>%
+  filter(runtime == 0)
+  
+```
+
+Question 4
+```{r}
+movies_runtime <-movies_selected %>%
+  mutate(runtime = na_if(runtime, "0"))
+ 
+```
+
+
+
+```{r}
+movies_runtime %>% 
+summarise(count = sum(is.na(runtime)))
+```
+
+
+Question 5
+```{r}
+movies_imputed <-movies_runtime %>% 
+
+  mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
+  
+```
+
+```{r}
+movies_imputed %>%
+ summarise(count = sum(is.na(runtime)))
+```
+Question 6
+```{r}
+movies_imputed %>%
+  slice_min(runtime, n = 10)
+
+```
+
+
+```{r}
+movies_imputed %>%
+  slice_max(runtime, n = 10)
+
+```
+
+Question 7
+```{r}
+movies_imputed %>%
+  mutate(budget = if_else(budget <100, median(budget), budget))
+```
+
+Extension 1
+
+```{r}
+movies_imputed %>%
+  mutate(
+    movie_budgets = case_when(
+    budget < 12e6 ~ "Small Budget",
+    budget < 40e6 ~ "Medium Budget",
+    TRUE          ~ "Large Budget")
+  )
+```
+
+
+Extension 2
+
+
+
+
+
+
+

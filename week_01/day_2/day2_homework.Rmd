@@ -21,6 +21,13 @@ Let’s first investigate the calories of different drinks. Select the variables
 
 
 ```{r}
+#starbucks_drinks %>% 
+#  select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+#  filter(drink_calories, !is.na(Calories)) %>% 
+
+#drink_calories
+
+
 drink_calories <- select(starbucks_drinks, Beverage_category, Beverage, Beverage_prep, Calories)
 drink_calories <- filter(drink_calories, !is.na(Calories))
 
@@ -32,7 +39,7 @@ drink_calories
 Create a new variable (column) called calorie_diff, which stores the difference between 135 calories (135 calories = 10 cubes of sugar!) and the calories in each drink. (hint: you’ll want to subtract the calories from 135 to see which drink have more or less than 10 cups of sugar). 
 
 ```{r}
-drink_calories <- mutate(drink_calories, calorie_diff = 135 - Calories)
+drink_calories <- mutate(drink_calories, calorie_diff = Calories -135)
 
 drink_calories
 ```
@@ -84,6 +91,8 @@ drinks_bev_prep
 Which is the best type of coffee drink to get if you’re worried about consuming too many calories?
 
 ```{r}
+
+#ambiguity over what variable to use to identify "coffee" - I've chosen Beverage_category
 drinks_coffee <- filter(drink_calories, Beverage_category %in% c("Classic Espresso Drinks", "Coffee", "Frappuccino® Blended Coffee", "Frappuccino® Blended Crème", "Frappuccino® Light Blended Coffee"))
 arrange(drinks_coffee, Calories)
 head(drinks_coffee, 5)
