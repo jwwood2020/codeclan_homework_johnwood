@@ -47,7 +47,9 @@ movies_runtime <-movies_selected %>%
 
 ```{r}
 movies_runtime %>% 
-summarise(count = sum(is.na(runtime)))
+  summarise(count = sum(is.na(runtime))) %>% 
+  select(everything()) %>% 
+  summarise(count = sum(is.na(.)))
 ```
 
 
@@ -79,14 +81,28 @@ movies_imputed %>%
 
 Question 7
 ```{r}
-movies_imputed %>%
-  mutate(budget = if_else(budget <100, median(budget), budget))
+movies_imputed <-movies_imputed %>%
+  mutate(budget = if_else(budget < 100, median(budget), budget)) %>% 
+slice_min(budget, n = 10)
 ```
+
+
+```{r}
+movies_imputed %>%
+  slice_min(budget, n = 10)
+#output shows the if_else in previous step hasn't worked?
+```
+
+
+
+
+
+
 
 Extension 1
 
 ```{r}
-movies_imputed %>%
+movies_budget <- movies_imputed %>%
   mutate(
     movie_budgets = case_when(
     budget < 12e6 ~ "Small Budget",
@@ -98,8 +114,19 @@ movies_imputed %>%
 
 Extension 2
 
+```{r}
+movies_data %>%
+  select(everything()) %>% 
+  summarise(count = sum(is.na(.)))
+  
+```
 
 
+```{r}
+movies_data %>%
+  select(everything()) %>% 
+  summarise(count = sum(is.na(.)))
+```
 
 
 
