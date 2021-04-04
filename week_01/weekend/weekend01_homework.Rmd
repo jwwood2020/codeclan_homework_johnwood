@@ -1,0 +1,278 @@
+---
+title: "Week 01 - Weekend Homework"
+output: html_notebook
+---
+
+```{r}
+#laad tidyverse library
+library(tidyverse)
+library(janitor)
+library(lubridate)
+```
+
+
+```{r}
+#Read in .csv file and explore data
+books <- read_csv("data/books.csv",
+                 col_types = cols(
+                    publication_date = col_date(format = "%m/%d/%Y")
+                    )
+                  ) 
+
+csv_problems <- problems(books)
+
+#identified 13 parsing failures - only four records
+#remove these four records if necessary. Is there a quick way to do this using problems()?
+
+#publication date being read in as a character
+#how to convert this to a date?
+
+
+books <- clean_names(books)
+
+#drop columns which will not be used in analysis
+books <- books  %>% 
+  select(
+         -isbn,
+         -isbn13,
+         -x13
+         ) 
+
+
+#summarise to find missing values
+#should be able to do this more efficiently without needing to list all?
+books %>%   
+  summarise(na_book_id = sum(is.na(book_id)), 
+            na_title = sum(is.na(title)), 
+            na_authors = sum(is.na(authors)), 
+            na_average_rating = sum(is.na(average_rating)), 
+            na_language_code = sum(is.na(language_code)), 
+            na_num_pages = sum(is.na(num_pages)), 
+            na_ratings_count = sum(is.na(ratings_count)), 
+            na_text_reviews_count = sum(is.na(text_reviews_count)), 
+            na_publication_date = sum(is.na(publication_date)), 
+            na_publisher = sum(is.na(publisher))
+  )
+            
+#This shorter version doesn't work
+#books %>%   
+#  summarise(
+#    across(1:10, 
+#           is_na(.)
+#               )
+#           )
+    
+    
+  
+
+```
+
+
+
+
+
+INITIAL EXPLORATION OF DATA
+
+```{r}
+books  %>% 
+ select(language_code) %>% 
+  distinct(language_code) %>% 
+  arrange()
+
+books %>% 
+  summarise(
+    across(
+      c(authors, language_code, publisher),
+      n_distinct)
+    )
+  
+
+```
+
+ 
+```{r}
+#Add new variables: publish_decade, book_size, rating_rounded, language
+
+books <- books %>% 
+  mutate(
+    book_size = case_when(
+      num_pages < 200  ~ "Short",
+      num_pages < 500  ~ "Medium",
+      num_pages >= 500 ~ "Long",
+      TRUE             ~ "Other"
+      ),
+    
+    rating_rounded = round(average_rating),
+    
+    decade_published = case_when(
+      year(publication_date) < 1900 ~ "pre-20thC",
+      year(publication_date) < 1935 ~ "early 20thC",
+      year(publication_date) < 1970 ~ "mid 20thC",
+      year(publication_date) < 2000 ~ "late 20thC",
+      year(publication_date) < 2010 ~ "2000s",
+      year(publication_date) < 2020 ~ "2010s",
+      year(publication_date) < 2022 ~ "2020s",
+      TRUE                          ~ "Other"
+      )
+    )
+    
+    
+
+```
+ 
+ 
+ DATA ANALYSIS
+ - most reviewed books/authors
+ - average number of ratings/reviews
+ - highest rated where #ratings larger than X
+ - title length: longest, shortest, average, most common
+ - title: most common words 
+ - authors: total number of authors; average number of books per author, highest rated authors, average rating per author
+ - average rating: mean, median, mode: histogram of rating 1,2,3,4,5
+ - number of ratings: mean/median/mode; average number of ratings, most rated, least rated, correlation between number of ratings and number of books
+ - number of reviews: mean/median/mode; ratio of ratings: reviews, average of this
+ - date of publication: average, group by decade, ratings by decade, reviews by decade
+ - publishers: number of publishers, number of books per publisher, number of authors per publisher, number of ratings/reviews by publisher, average rating by publisher
+ 
+ 
+```{r}
+#Analysis by author
+
+#Most reviewed, average rating of all their books reviewed
+books %>% 
+  select(authors,
+         ratings_count,
+         average_rating
+         ) %>% 
+  
+  group_by(authors) %>%
+  
+  summarise(
+    total_ratings = sum(ratings_count), 
+    overall_rating = mean(average_rating)
+    ) %>% 
+  
+  top_n(n = 20, wt = total_ratings) %>% 
+  
+  arrange(desc(total_ratings))
+
+#Highest rated, subject to mimimum number of reviews
+books %>% 
+  select(authors,
+         ratings_count,
+         average_rating
+         ) %>% 
+  
+  group_by(authors) %>% 
+  
+  filter(ratings_count > 500) %>% 
+  
+  summarise(
+    total_ratings = sum(ratings_count),
+    overall_rating = mean(average_rating)
+    ) %>% 
+  
+  top_n(n = 20, wt = overall_rating) %>% 
+  
+  arrange(desc(overall_rating))
+
+#Lowest rated, subject to minimum number of reviews
+books %>% 
+  select(authors, 
+         ratings_count,
+         average_rating
+         ) %>% 
+  
+  group_by(authors) %>% 
+  
+  filter(ratings_count > 500) %>% 
+  
+  summarise(
+    total_ratings = sum(ratings_count),
+    overall_rating = mean(average_rating)
+  ) %>% 
+  
+  top_n(n = -20, wt = overall_rating) %>% 
+  
+  arrange(overall_rating)
+
+
+
+```
+ 
+ 
+ 
+```{r}
+#Analysis by book title
+#Most reviewed, average rating of these
+
+books %>% 
+  select(
+    title,
+    authors,
+    ratings_count,
+    average_rating) %>% 
+  
+  group_by(title) %>% 
+  
+  summarise(
+    authors,
+    total_ratings = sum(ratings_count),
+    overall_rating = mean(average_rating)
+    ) %>% 
+  
+  top_n(n = 20, wt = total_ratings) %>% 
+  
+  arrange(desc(total_ratings))
+  
+
+#Highest rated, subject to minimum number of reviews
+books %>% 
+  select(title, 
+         authors,
+         ratings_count,
+         average_rating
+         ) %>% 
+ 
+  filter(ratings_count > 500) %>% 
+  
+  slice_max(average_rating, n = 20)
+
+
+#Lowest rated, subject to minimum number of reviews
+books %>% 
+  select(title,
+         authors,
+         ratings_count,
+         average_rating) %>% 
+  
+  filter(ratings_count > 500) %>% 
+  
+  slice_min(average_rating, n = 20)
+```
+ 
+```{r}
+books %>% 
+  select(title, 
+         ratings_count, 
+         average_rating) %>% 
+  
+  group_by(title) %>%
+  
+  summarise(
+    total_ratings = sum(ratings_count), 
+    overall_rating = mean(average_rating)
+    ) %>% 
+  
+  top_n(n = 20, wt = total_ratings) %>% 
+  
+  arrange(desc(total_ratings))
+
+```
+ 
+ 
+ 
+ 
+ 
+ 
+
