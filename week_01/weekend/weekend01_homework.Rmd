@@ -1,6 +1,8 @@
 ---
 title: "Week 01 - Weekend Homework"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r}
@@ -56,7 +58,12 @@ books %>%
   )
             
 
+# how many missing values
+sum(is.na(books))
 
+# how many missing values across columns
+books %>% 
+  summarise(across(.fns = ~ sum(is.na(.x))))         
 #This shorter version doesn't work - what is wrong?
 
 #books %>% 
@@ -157,7 +164,7 @@ books %>%
   select(authors,
          ratings_count,
          average_rating
-         ) %>% 
+         ) %>%         
   
   group_by(authors) %>%
   
@@ -173,7 +180,7 @@ books %>%
   select(authors,
          ratings_count,
          average_rating
-         ) %>% 
+         ) %>%  
   
   group_by(authors) %>% 
   
