@@ -96,7 +96,7 @@ code_clan_tweets %>%
 code_clan_tweets %>% 
   
   mutate(
-          media_type = coalesce( media_type, "text")
+          media_type = coalesce(media_type, "text")
         ) %>% 
   
   group_by(media_type) %>% 
@@ -156,7 +156,7 @@ names(code_clan_url)
 
 code_clan_tweets <- code_clan_tweets %>% 
   
-  inner_join(code_clan_url, by = "tweet_id")
+  left_join(code_clan_url, by = "tweet_id")
   
 ```
 

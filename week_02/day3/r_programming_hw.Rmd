@@ -1,0 +1,174 @@
+---
+title: "Programming in R Homework"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: ../../../styles.css
+  pdf_document: default
+---
+
+# MVP
+
+1. Find the weather forecast for the next three days online. Create a list of lists in which each inner list should be labelled with the name of the day of the week. Each inner list should contain named elements telling you the temperature, chance of rain and wind speed.
+
+```{r}
+weather_forecast <- 
+                  list(
+                      thursday = list(temperature = 9, chance_rain = 0.36, wind_speed = 43), 
+                      friday   = list(temperature = 8, chance_rain = 0.07, wind_speed = 12),
+                      saturday = list(temperature = 7, chance_rain = 0.11, wind_speed = 6)
+                      )
+```
+
+
+
+2. Using the list you've just made find:
+  i. The chance of rain tomorrow
+  
+```{r}
+
+weather_forecast$thursday$chance_rain
+
+```
+  
+  
+  ii. The wind speed on the day after tomorrow
+  
+```{r}
+weather_forecast$friday$wind_speed
+```
+  
+  iii. The temperature tomorrow.
+```{r}
+weather_forecast$thursday$temperature
+```
+
+
+
+3. Find a 14 day forecast online and create a matrix of the forecasts for temperature, where each week is one row and columns correspond to days.
+
+You will want to give a name to the matrix you create.
+
+```{r}
+forecast_14_day <- matrix(
+                          c(9, 8, 7, 8, 9, 10, 9, 10, 10, 9, 9, 10, 11, 10),
+                          nrow = 2,
+                          ncol = 7,
+                          byrow = TRUE
+                          )
+               
+forecast_14_day
+ 
+```
+
+
+4. From the matrix you just made select:
+  i. The third day of the second week
+```{r}
+forecast_14_day[1,3]
+```
+
+  ii. The whole second week
+```{r}
+forecast_14_day[2,]
+```
+  
+  iii. The first, third and fifth days in both weeks.
+```{r}
+forecast_14_day[ ,c(1, 3, 5)]
+```
+  
+
+5. Write a function that pre-appends "The answer is: " to any character input, while for numeric input, it either just returns the number for numbers less than 10, or divides the number by 10 for numbers greater than 10. For anything else return "Invalid input".
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+
+add_answer <- function(input){
+  
+  if (is.character(input)){
+    
+    return(str_c("The answer is: ", input))
+  } else {
+    
+    if (is.numeric(input)) {
+      
+      return(if_else(input < 10, input, input/10))
+      
+    } else 
+      
+      return("Invalid input")
+  }
+  
+  
+ 
+}
+
+add_answer("It works!")
+
+```
+
+
+6. Write a function which checks if two vectors have the same elements. 
+  * If they have the same elements in the same order, return "Exactly the same"
+  * If they have the same elements but in a different order, return "The same"
+  * If they don't have the same elements, return "Different".
+
+```{r}
+
+
+check_vectors <- function(vector_1, vector_2){
+  
+  unsorted_check <- all(vector_1 == vector_2)
+  sorted_check <- all(sort(vector_1) == sort(vector_2))
+  
+  if (unsorted_check){
+    
+    return("Exactly the same")
+    
+  } else {
+    
+    if (sorted_check){
+      
+      return("The same")
+    } else {
+      
+      return("Different")
+    }
+  }
+  
+}
+vector_1 = 1:10
+vector_2 = 5:14
+
+check_vectors(vector_1, vector_2)
+```
+
+
+
+
+
+# Extension
+
+7. Write code that prints a multiplication table for numbers up to 12. i.e. there will be 12 rows and 12 columns, and each element should be the row number multiplied by the column number.
+
+*From: https://adriann.github.io/programming_problems.html*
+
+8. Write a function that takes a vector, and creates a text art histogram, like the one below.
+
+You may want to use the function `cat()`. This is similar to `print()`, but prints directly, without vector markers. You can also include newlines `"\n"` when using `cat()`.
+
+```
+1 | ***
+2 | *
+3 | *******
+4 | ****
+5 | **
+```
+
