@@ -21,6 +21,8 @@ weather_forecast <-
                       friday   = list(temperature = 8, chance_rain = 0.07, wind_speed = 12),
                       saturday = list(temperature = 7, chance_rain = 0.11, wind_speed = 6)
                       )
+
+weather_forecast
 ```
 
 
@@ -95,6 +97,7 @@ add_answer <- function(input){
   if (is.character(input)){
     
     return(str_c("The answer is: ", input))
+    
   } else {
     
     if (is.numeric(input)) {
@@ -128,22 +131,33 @@ check_vectors <- function(vector_1, vector_2){
   unsorted_check <- all(vector_1 == vector_2)
   sorted_check <- all(sort(vector_1) == sort(vector_2))
   
-  if (unsorted_check){
+  if (length(vector_1) != length(vector_2)){
+  
+  return("Different")
     
-    return("Exactly the same")
-    
-  } else {
-    
-    if (sorted_check){
-      
-      return("The same")
     } else {
       
-      return("Different")
+      if (unsorted_check){
+        
+        return("Exactly the same")
+        
+        } else {
+          
+          if (sorted_check){
+            
+            return("The same")
+            
+            } else {
+              
+              return("Different")
+              
+            }
+          
+        }
+      
     }
-  }
   
-}
+  }
 vector_1 = 1:10
 vector_2 = 5:14
 
@@ -153,10 +167,29 @@ check_vectors(vector_1, vector_2)
 
 
 
-
 # Extension
 
 7. Write code that prints a multiplication table for numbers up to 12. i.e. there will be 12 rows and 12 columns, and each element should be the row number multiplied by the column number.
+
+
+```{r}
+multiplication_table = matrix(nrow = 12, ncol = 12)
+
+multiplication_table %>% 
+  
+  for (row in 1:12){
+     for (col in 1:12){
+    multiplication_table[row, 1] = row * 5
+   
+   
+    }
+   }
+
+```
+
+
+
+
 
 *From: https://adriann.github.io/programming_problems.html*
 
