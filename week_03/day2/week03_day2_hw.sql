@@ -141,6 +141,15 @@ GROUP BY(t.id)
 ORDER BY team_id ;
 
 
+SELECT 
+	t.id AS team_ID,
+	t.name AS team_name,
+	CAST(t.charge_cost AS INTEGER) * COUNT(e.id) AS total_day_charge
+FROM teams AS t
+LEFT JOIN employees AS e
+ON t.id = e.team_id
+GROUP BY(t.id)
+ORDER BY team_id ;
 
 
 /* (/c). How would you amend your query from above to show only those teams with a total_day_charge greater than 5000? */
