@@ -90,7 +90,8 @@ SELECT
 FROM employees 
 WHERE first_name IS NOT NULL
 	AND last_name IS NOT NULL
-	AND department IS NOT NULL;
+	AND department IS NOT NULL
+	AND start_date IS NOT NULL;
 
 
 
