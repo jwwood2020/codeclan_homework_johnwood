@@ -17,9 +17,9 @@ WHERE local_account_no IS NULL AND iban IS NULL;
 Get a table of employees first_name, last_name and country, ordered alphabetically first by country and then by last_name (put any NULLs last).*/
 
 SELECT
+	country,
 	first_name,
-	last_name,
-	country
+	last_name
 FROM employees 
 ORDER BY country, last_name NULLS LAST;
 
@@ -223,7 +223,8 @@ WITH dept_total_emps AS (
 	GROUP BY department
 )
 SELECT 
- 	e.department,
+ 	e.department AS department,
+ 	d.num_employees AS total_employees,
  	COUNT(e.id) AS num_grade1,
  	100 * COUNT(e.id)/d.num_employees AS percentage_grade1
 FROM employees as e
@@ -232,21 +233,6 @@ ON e.department = d.department
 WHERE grade = 1
 GROUP BY e.department, d.num_employees 
 ORDER BY e.department;
-
-
-WITH totals AS (
-SELECT 
-	department,
-	CAST(grade AS integer) AS grade_int,
-	COUNT(id) AS num_employees,
-FROM employees 
-GROUP BY department 
-
-
-
-
-
-
 
 
 
@@ -262,6 +248,8 @@ Question 17.
 [Tough] Get a list of the id, first_name, last_name, department, salary and fte_hours of employees in the largest department. 
 Add two extra columns showing the ratio of each employee’s salary to that department’s average salary, and each employee’s fte_hours to that department’s average fte_hours.*/
 
+
+/* First attempt using CTEs */
 
 WITH dept_total_emps AS (
 	SELECT 
@@ -291,10 +279,27 @@ ON e.department = d.department
 WHERE d.size_rank = 1;
 
 
+/* Second attempt using window functions - how to identify largest department? */
+
+SELECT 
+    e.first_name,
+    e.last_name,
+    t.name AS team_name,
+    e.salary,
+    e.fte_hours,
+    ROUND(e.salary / AVG(e.salary) OVER (PARTITION BY e.team_id), 3) 
+      AS salary_ratio_team_average,
+    ROUND(e.fte_hours / AVG(e.fte_hours) OVER (PARTITION BY e.team_id), 3) 
+      AS fte_ratio_team_average
+FROM employees AS e INNER JOIN teams AS t
+ON e.team_id = t.id 
+ORDER BY e.team_id
 
 
 /*[Extension - how could you generalise your query to be able to handle the fact that two or more departments may be tied in their counts of employees.
   In that case, we probably don’t want to arbitrarily return details for employees in just one of these departments]. */
+
+/* Use DENSE_RANK */
 
 
 
@@ -361,7 +366,6 @@ ON  e.id = e_c.employee_id
 /*Count the number of committee members in each salary_class.*/
 
 SELECT 
-	e_c.committee_id,
 	CASE 
 		WHEN salary < 40000 THEN 'low'
 		WHEN salary > 40000 THEN 'high'
@@ -371,8 +375,8 @@ SELECT
 FROM employees AS e
 INNER JOIN employees_committees AS e_c
 ON  e.id = e_c.employee_id 
-GROUP BY e_c.committee_id, salary_group
-ORDER BY e_c.committee_id, salary_group
+GROUP BY salary_group
+ORDER BY salary_group
 ;
 
 
