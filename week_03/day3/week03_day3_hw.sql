@@ -2,9 +2,7 @@
 Are there any pay_details records lacking both a local_account_no and iban number?*/
 
 SELECT 
-	id,
-	local_account_no,
-	iban 
+	COUNT(id) AS missing_acc_iban
 FROM pay_details 
 WHERE local_account_no IS NULL AND iban IS NULL;
 
@@ -84,7 +82,7 @@ SELECT
 	COUNT(id) AS num_employees
 FROM employees 
 GROUP BY department, fte_hours
-ORDER BY department, fte_hours;
+ORDER BY departmentS ASC NULLS LAST, fte_hours ASC NULLS LAST;
 
 
 
@@ -93,8 +91,8 @@ ORDER BY department, fte_hours;
 Provide a breakdown of the numbers of employees enrolled, not enrolled, and with unknown enrollment status in the corporation pension scheme.*/
 
 SELECT 
-	pension_enrol,
-	count(id)
+	pension_enrol AS pension_enrolled,
+	count(id) AS num_employees
 FROM employees 
 GROUP BY pension_enrol ;
 
@@ -218,7 +216,7 @@ ORDER BY COUNT(id) DESC, first_name;
 WITH dept_total_emps AS (
 	SELECT 
  		department,
- 		COUNT(id) AS num_employees
+ 		CAST(COUNT(id) AS REAL) AS num_employees
 	FROM employees 
 	GROUP BY department
 )
@@ -233,6 +231,42 @@ ON e.department = d.department
 WHERE grade = 1
 GROUP BY e.department, d.num_employees 
 ORDER BY e.department;
+
+
+
+WITH grade_1_count AS (
+	 	SELECT 
+			 department,
+	 		COUNT(id) AS count_grade_1
+	 	FROM employees
+	 	WHERE grade = 1
+	 	GROUP BY department
+	 	),
+	 department_count AS (
+	 	SELECT 
+	 		department,
+	 		count(id) AS count_all
+	 	FROM employees
+	 	GROUP BY department
+	 	)
+SELECT 
+	dc.department,
+	g.count_grade_1,
+	dc.count_all,
+	g.count_grade_1/dc.count_all AS propn_grade_1
+FROM department_count AS dc
+INNER JOIN grade_1_count AS g
+ON dc.department = g.department
+
+
+SELECT 
+ department,
+ SUM(CAST(grade = 1 AS INT)) AS g1_count,
+ COUNT(id) AS num_employees,
+ SUM(CAST(grade = 1 AS INT))/CAST(COUNT(id) AS REAL) AS g1_propn
+FROM employees 
+GROUP BY department 
+
 
 
 
@@ -279,21 +313,30 @@ ON e.department = d.department
 WHERE d.size_rank = 1;
 
 
-/* Second attempt using window functions - how to identify largest department? */
+/* Second attempt using window functions */
 
 SELECT 
-    e.first_name,
-    e.last_name,
-    t.name AS team_name,
-    e.salary,
-    e.fte_hours,
-    ROUND(e.salary / AVG(e.salary) OVER (PARTITION BY e.team_id), 3) 
-      AS salary_ratio_team_average,
-    ROUND(e.fte_hours / AVG(e.fte_hours) OVER (PARTITION BY e.team_id), 3) 
-      AS fte_ratio_team_average
-FROM employees AS e INNER JOIN teams AS t
-ON e.team_id = t.id 
-ORDER BY e.team_id
+    first_name,
+    last_name,
+    department ,
+    salary,
+    fte_hours,
+    salary / AVG(salary) OVER (PARTITION BY department) AS ratio_dept_avg_sal,
+    salary / AVG(fte_hours) OVER (PARTITION BY department) AS ratio_dept_avg_fte
+FROM employees 
+WHERE department = (
+	SELECT 
+		department
+	FROM employees 
+	GROUP BY department 
+	ORDER BY COUNT(id) DESC NULLS LAST 
+	LIMIT 1);
+
+
+
+
+
+
 
 
 /*[Extension - how could you generalise your query to be able to handle the fact that two or more departments may be tied in their counts of employees.
@@ -380,7 +423,7 @@ ORDER BY salary_group
 ;
 
 
-
+/* SHOULD USE DISTINCT COUNT */
 
 
 
