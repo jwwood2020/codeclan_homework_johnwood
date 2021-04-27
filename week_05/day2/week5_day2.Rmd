@@ -1,0 +1,101 @@
+---
+title: "Week 5 Day 2 Homework"
+output: html_notebook
+---
+
+```{r}
+# Load libraries
+library(tidyverse)
+library(CodeClanData)
+library(lubridate)
+```
+
+```{r}
+# review data
+qb_revenue_breakdown
+
+qb_monthly_sales
+qb_competitors
+qb_device_data
+```
+
+PART 1
+1. Take the data in the dataset qb_revenue_breakdown and make a stacked bar chart showing the sources of revenue across the two years in the dataset.
+
+```{r}
+qb_revenue_breakdown %>% 
+  ggplot() +
+  aes(x = Year,
+      y = Revenue,
+      fill = Product) +
+  geom_bar(position = "stack",
+           stat = "identity")
+```
+
+2. Make a line chart showing monthly sales of the “flagship product” - the ‘KwikBit Unit 1’ - over the last year. This data is inside qb_monthly_sales, but you will need to use filter() or subset() (base R).
+
+```{r}
+qb_monthly_sales %>% 
+  filter(year(Date) == 2019) %>% 
+  filter(Cashflow == "Kwikbit Unit 1 Sales") %>% 
+  ggplot() +
+  aes(x = Date,
+      y = Amount) +
+  geom_line()
+
+
+```
+
+3. Make a line chart showing monthly revenue and costs over the last year. This data is also in qb_monthly_sales.
+
+```{r}
+qb_monthly_sales %>% 
+  filter(year(Date) == 2019) %>% 
+  filter(Cashflow %in% c("Total Revenue", "Cost")) %>%
+  ggplot() +
+  aes(x = Date,
+      y = Amount,
+      group = Cashflow,
+      colour = Cashflow) +
+  geom_line()
+```
+4. Show annual sales of personal fitness trackers over the last 5 years broken down by company as a ribbon plot (use geom_area). This data is in qb_competitors.
+
+```{r}
+qb_competitors %>% 
+  ggplot() +
+  aes(x = Year,
+      y = Revenue,
+      group = Company,
+      fill = Company) +
+  geom_area()
+
+```
+
+5. Now show the sales from the four competitors as a line graph. Include an extra layer that shows the data points used to make the lines.
+```{r}
+qb_competitors %>% 
+  ggplot() +
+  aes(x = Year,
+      y = Revenue,
+      group = Company,
+      colour = Company) +
+  geom_line() +
+  geom_point()
+```
+
+6. Now the company wants to compare the number of steps that their device counts vs. their competitors. Make a line graph of the number of steps throughout time, and use faceting to compare between companies and people. The data for this is in qb_device_data.
+```{r}
+qb_device_data %>% 
+  mutate(time = (100 * hours) + mins) %>% 
+  ggplot() +
+  aes(x = time,
+      y = counts,
+      ) +
+  geom_line() +
+  facet_grid(device ~ id)
+  
+
+
+```
+
