@@ -171,6 +171,7 @@ qb_device_data %>%
     y = "Number of steps",
     title = "Steps recorded"
   ) +
+   scale_colour_manual(values = col_scheme) +
   theme_qikbit() +
   theme(
     axis.text.x = element_blank(),
