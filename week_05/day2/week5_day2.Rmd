@@ -11,100 +11,162 @@ library(lubridate)
 library(scales)
 ```
 
+```{r}
+# Set theme
+
+col_scheme <- c("#E89FE9", "#50434F", "#B6A7B5", "#F9A472", "#BD7040")
+theme_qikbit <- function() {
+  theme_minimal() %+replace% # replace elements we want to change
+    theme(
+
+      # grid elements
+      panel.background = element_blank(),
+      plot.background = element_rect(fill = "gray96", colour = NA),
+      legend.background = element_rect(fill = "transparent", colour = NA),
+      legend.key = element_rect(fill = "transparent", colour = NA),
+
+      # text elements
+      plot.title = element_text(size = 13,),
+      plot.subtitle = element_text(size = 12), 
+      axis.title = element_text(size = 10), 
+      axis.text = element_text(size = 9), 
+      
+      
+    )
+}
+```
+
+
+
 PART 1
 1. Take the data in the dataset qb_revenue_breakdown and make a stacked bar chart showing the sources of revenue across the two years in the dataset.
 
 ```{r}
-qb_revenue_breakdown %>% 
+qb_revenue_breakdown %>%
   ggplot() +
-  aes(x = Year,
-      y = Revenue,
-      fill = Product) +
-  geom_bar(position = "stack",
-           stat = "identity") +
-  labs(title = "Revenue by product")
+  aes(
+    x = Year,
+    y = Revenue,
+    fill = Product
+  ) +
+  geom_bar(
+    position = "stack",
+    stat = "identity"
+  ) +
+  scale_fill_manual(values = col_scheme) +
+  labs(title = "Revenue by product") +
+  theme_qikbit()
 ```
 
 2. Make a line chart showing monthly sales of the “flagship product” - the ‘KwikBit Unit 1’ - over the last year. This data is inside qb_monthly_sales, but you will need to use filter() or subset() (base R).
 
 ```{r}
-qb_monthly_sales %>% 
-  filter(year(Date) == 2019) %>% 
-  filter(Cashflow == "Kwikbit Unit 1 Sales") %>% 
+qb_monthly_sales %>%
+  filter(year(Date) == 2019) %>%
+  filter(Cashflow == "Kwikbit Unit 1 Sales") %>%
   ggplot() +
-  aes(x = Date,
-      y = Amount) +
+  aes(
+    x = Date,
+    y = Amount
+  ) +
   geom_line() +
-  labs(x = "\nMonth",
-       y = "Units sold",
-       title = "Kwikbit sales - 2019")
-
-
+  scale_x_date(
+    breaks = "1 month",
+    date_labels = "%b"
+  ) +
+  labs(
+    x = "\nMonth",
+    y = "Units sold",
+    title = "Kwikbit sales - 2019"
+  ) +
+  theme_qikbit()
 ```
 
 3. Make a line chart showing monthly revenue and costs over the last year. This data is also in qb_monthly_sales.
 
 ```{r}
-qb_monthly_sales %>% 
-  filter(year(Date) == 2019) %>% 
+qb_monthly_sales %>%
+  filter(year(Date) == 2019) %>%
   filter(Cashflow %in% c("Total Revenue", "Cost")) %>%
   ggplot() +
-  aes(x = Date,
-      y = Amount,
-      group = Cashflow,
-      colour = Cashflow) +
+  aes(
+    x = Date,
+    y = Amount,
+    group = Cashflow,
+    colour = Cashflow
+  ) +
   geom_line() +
-  scale_x_date(breaks = "1 month",
-               date_labels = "%b") +
-  labs(x = "Month",
-       title = "Monthly revenue and costs - 2019")
+  scale_x_date(
+    breaks = "1 month",
+    date_labels = "%b"
+  ) +
+  scale_colour_manual(values = col_scheme) +
+  labs(
+    x = "Month",
+    title = "Monthly revenue and costs - 2019"
+  ) +
+  theme_qikbit()
 ```
 4. Show annual sales of personal fitness trackers over the last 5 years broken down by company as a ribbon plot (use geom_area). This data is in qb_competitors.
 
 ```{r}
-qb_competitors %>% 
+qb_competitors %>%
   ggplot() +
-  aes(x = Year,
-      y = Revenue/10^6,
-      group = Company,
-      fill = Company) +
+  aes(
+    x = Year,
+    y = Revenue / 10^6,
+    group = Company,
+    fill = Company
+  ) +
   geom_area() +
-  labs(title = "Annual fitness tracker sales",
-       y = "Revenue, £m")
-
+  scale_fill_manual(values = col_scheme) +
+  labs(
+    title = "Annual fitness tracker sales",
+    y = "Revenue, £m"
+  ) +
+  theme_qikbit()
 ```
 
 5. Now show the sales from the four competitors as a line graph. Include an extra layer that shows the data points used to make the lines.
 ```{r}
-qb_competitors %>% 
+qb_competitors %>%
   ggplot() +
-  aes(x = Year,
-      y = Revenue/10^6,
-      group = Company,
-      colour = Company) +
+  aes(
+    x = Year,
+    y = Revenue / 10^6,
+    group = Company,
+    colour = Company
+  ) +
   geom_line() +
   geom_point() +
-  labs(title = "Annual fitness tracker sales",
-       y = "Revenue, £m")
+  scale_colour_manual(values = col_scheme) +
+  labs(
+    title = "Annual fitness tracker sales",
+    y = "Revenue, £m"
+  ) +
+  theme_qikbit()
 ```
 
 6. Now the company wants to compare the number of steps that their device counts vs. their competitors. Make a line graph of the number of steps throughout time, and use faceting to compare between companies and people. The data for this is in qb_device_data.
 ```{r}
-qb_device_data %>% 
-  mutate(time = (100 * hours) + mins) %>% 
+qb_device_data %>%
+  mutate(time = (100 * hours) + mins) %>%
   ggplot() +
-  aes(x = time,
-      y = counts) +
+  aes(
+    x = time,
+    y = counts
+  ) +
   geom_line() +
   facet_grid(device ~ id) +
   scale_y_continuous(breaks = c(0, 5000, 10000)) +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()) + 
-  labs(x = "Time of day",
-       y = "Number of steps",
-       title = "Steps recorded") 
-  
-
-
+  labs(
+    x = "Time of day",
+    y = "Number of steps",
+    title = "Steps recorded"
+  ) +
+  theme_qikbit() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank()
+  )
 ```
-
