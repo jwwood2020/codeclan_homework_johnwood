@@ -1,0 +1,62 @@
+---
+title: "R Notebook - investigating data"
+output: html_notebook
+---
+
+This notebook contains the R code for the exploratory data analysis/visualisation of the 'game_sales' dataset. It will be used for design/build of the Shiny app.
+
+
+```{r}
+library(tidyverse)
+library(CodeClanData)
+library(skimr)
+```
+
+```{r}
+game_sales <- game_sales
+
+skim(game_sales)
+
+```
+
+Summary tables for dashboard front page
+
+```{r}
+#Top titles by sales
+
+game_sales %>% 
+  select(name, year_of_release, sales, platform) %>% 
+  group_by(name) %>% 
+  summarise(total_sales = sum(sales)) %>% 
+  slice_max(total_sales, n = 10)
+  
+
+```
+
+
+```{r}
+#Top titles by critic score
+
+game_sales %>% 
+  distinct(name, .keep_all = TRUE) %>% 
+  select(name, year_of_release, platform, critic_score) %>% 
+  slice_max(critic_score, n = 10)
+```
+
+```{r}
+#Top 10 user rated
+game_sales %>% 
+  distinct(name, .keep_all = TRUE) %>% 
+  select(name, year_of_release, platform, user_score) %>% 
+  slice_max(user_score, n = 10)
+```
+
+```{r}
+# top selling genres
+game_sales %>% 
+  select(genre, sales) %>% 
+  group_by(genre) %>% 
+  summarise(total_sales = sum(sales)) %>% 
+  slice_max(total_sales, n = 10)
+```
+
