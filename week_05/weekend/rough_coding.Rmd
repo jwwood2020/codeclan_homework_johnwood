@@ -19,16 +19,17 @@ skim(game_sales)
 
 ```
 
+
+----------------------------------------------
 Summary tables for dashboard front page
+----------------------------------------------
 
 ```{r}
 #Top titles by sales
 
 game_sales %>% 
-  select(name, year_of_release, sales, platform) %>% 
-  group_by(name) %>% 
-  summarise(total_sales = sum(sales)) %>% 
-  slice_max(total_sales, n = 10)
+  select(name, year_of_release, platform, sales) %>% 
+  slice_max(sales, n = 10)
   
 
 ```
@@ -58,5 +59,84 @@ game_sales %>%
   group_by(genre) %>% 
   summarise(total_sales = sum(sales)) %>% 
   slice_max(total_sales, n = 10)
+```
+
+-------------------------------------------
+Tables for top 10 analysis page
+-------------------------------------------
+
+```{r}
+game_sales %>% 
+  select(name,
+         genre,
+         year_of_release,
+         platform,
+         critic_score,
+         user_score,
+         sales) %>% 
+  #filter(year_of_release == 2008) %>% 
+  #filter(platform = USER CHOICE)
+  #filter(genre = USER CHOICE)
+  slice_max(critic_score, n = 10)
+  #user choice on what slice_max will be based on: sales, critic_score or user_score
+```
+
+--------------------------------
+Tables for second analysis tab - by year
+-----------------------------
+
+```{r}
+game_sales %>% 
+  group_by(year_of_release) %>% 
+  summarise(total_sales = sum(sales))
+```
+
+
+```{r}
+#ALL YEARS SALES
+game_sales %>% 
+  group_by(year_of_release) %>% 
+  summarise(total_sales = sum(sales)) %>% 
+  ggplot() +
+  aes(x = year_of_release,
+      y = total_sales) +
+  geom_col()
+  
+```
+
+```{r}
+#ALL YEARS AVERAGE RATING
+game_sales %>% 
+  group_by(year_of_release) %>% 
+  summarise(average_critic = mean(critic_score)) %>% 
+  ggplot() +
+  aes(x = year_of_release,
+      y = average_critic) %>% 
+  geom_col()
+
+```
+
+---------------------------------------
+Tables for third tab - analyis by platform
+---------------------------------------
+
+```{r}
+game_sales %>% 
+  filter(platform %in% c("Wii", "PS2")) %>% 
+  ggplot() +
+  aes(x = year_of_release,
+      y = sales,
+      fill = platform) +
+  geom_col() +
+  facet_wrap(~ platform)
+  
+
+```
+
+```{r}
+game_sales %>% 
+  filter(platform %in% c("Wii", "PS2")) %>%
+  group_by(platform, year_of_release) %>% 
+  summarise(total_sales = sum(sales))
 ```
 
