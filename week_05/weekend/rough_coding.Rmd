@@ -25,10 +25,11 @@ Summary tables for dashboard front page
 ----------------------------------------------
 
 ```{r}
-#Top titles by sales
+#Top titles
 
 game_sales %>% 
-  select(name, year_of_release, platform, sales) %>% 
+  filter(year_of_release != 1988) %>% 
+  select(name, genre, year_of_release, platform,critic_score, user_score, sales) %>% 
   slice_max(sales, n = 10)
   
 
@@ -87,19 +88,21 @@ Tables for second analysis tab - by year
 
 ```{r}
 game_sales %>% 
+  filter(year_of_release != 1988) %>% 
   group_by(year_of_release) %>% 
-  summarise(total_sales = sum(sales))
+  summarise(total_sales = sum(sales),
+            average_critic_score = mean(critic_score),
+            average_user_score = mean(user_score))
 ```
 
 
 ```{r}
 #ALL YEARS SALES
 game_sales %>% 
-  group_by(year_of_release) %>% 
-  summarise(total_sales = sum(sales)) %>% 
+  filter(year_of_release != 1988) %>% 
   ggplot() +
   aes(x = year_of_release,
-      y = total_sales) +
+      y = sales) +
   geom_col()
   
 ```
@@ -107,6 +110,7 @@ game_sales %>%
 ```{r}
 #ALL YEARS AVERAGE RATING
 game_sales %>% 
+  filter(year_of_release != 1988) %>% 
   group_by(year_of_release) %>% 
   summarise(average_critic = mean(critic_score)) %>% 
   ggplot() +
@@ -122,6 +126,7 @@ Tables for third tab - analyis by platform
 
 ```{r}
 game_sales %>% 
+  filter(year_of_release != 1988) %>% 
   filter(platform %in% c("Wii", "PS2")) %>% 
   ggplot() +
   aes(x = year_of_release,
@@ -135,8 +140,16 @@ game_sales %>%
 
 ```{r}
 game_sales %>% 
+  filter(year_of_release != 1988) %>% 
   filter(platform %in% c("Wii", "PS2")) %>%
   group_by(platform, year_of_release) %>% 
   summarise(total_sales = sum(sales))
+```
+
+```{r}
+game_sales %>% 
+  ggplot() +
+  aes(x = year_of_release, y = critic_score) +
+  geom_point(alpha = 0.2)
 ```
 
