@@ -143,7 +143,8 @@ server <- function(input, output, session) {
             y = total_sales) +
         geom_col() +
       labs(x = "\nYear of release",
-           y = "Total sales")
+           y = "Total sales") +
+      theme_minimal()
   })
     
   output$platform_critic <- renderPlot({    
@@ -153,7 +154,8 @@ server <- function(input, output, session) {
         geom_line() +
         scale_y_continuous(limits = c(0,100)) +
       labs(x = "\nYear of Release",
-           y = "Average Critic score")
+           y = "Average Critic score") +
+      theme_minimal()
   })
     
   output$platform_user <- renderPlot({
@@ -163,7 +165,8 @@ server <- function(input, output, session) {
         geom_line() +
         scale_y_continuous(limits = c(0,10)) +
       labs(x = "\nYear of release",
-           y = "Average user score")
+           y = "Average user score")+
+      theme_minimal()
   })
     
   #----------------------------------------------
