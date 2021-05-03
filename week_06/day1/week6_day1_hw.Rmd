@@ -1,0 +1,189 @@
+---
+title: "Week 6 Day 1 Homework"
+output: html_notebook
+---
+
+```{r}
+library(prob)
+library(gtools)
+library(tidyverse)
+library(conflicted)
+conflict_prefer("filter", "dplyr")
+
+```
+
+MVP - Titanic
+
+```{r}
+titanic <- read_csv("data/titanic.csv")
+
+titanic <- titanic %>% 
+  mutate(crew = case_when(
+    class %in% c("1st", "2nd", "3rd") ~ FALSE,
+    TRUE ~ TRUE
+  ))
+
+```
+
+```{r}
+table <- titanic %>% 
+  janitor::tabyl(crew, survived) %>% 
+  janitor::adorn_totals(where = c("row", "col")) %>% 
+  janitor::adorn_percentages(den = "all") %>% 
+  janitor::adorn_title()
+
+table
+```
+
+# Can use the above table to answer the question or do it using R as below:
+```{r}
+#Probabiity of being in the crew
+p_crew <- titanic %>% 
+ summarise(prob = sum(crew == "TRUE")/n())
+
+p_crew  
+```
+
+```{r}
+#Probability of being in the crew AND surviving
+p_surv_and_crew <- titanic %>% 
+  filter(crew == "TRUE" & survived == "yes") %>% 
+  summarise(prob = n()/nrow(titanic))
+
+p_surv_and_crew
+```
+
+```{r}
+#Probability of surviving given being in the crew:
+
+p_surv_cond_crew = p_surv_and_crew / p_crew
+
+p_surv_cond_crew
+```
+
+```{r}
+#Probability of being a passenger
+
+p_passenger <- 1 - p_crew
+
+p_passenger
+```
+```{r}
+#Probability of being a passenger AND surviving
+
+p_surv_and_passenger <- titanic %>% 
+  filter(crew == "FALSE" & survived == "yes") %>% 
+  summarise(prob = n()/nrow(titanic))
+
+p_surv_and_passenger
+```
+
+```{r}
+#Probability of surviving given being a passenger
+
+p_surv_cond_passenger = p_surv_and_passenger/p_passenger
+
+p_surv_cond_passenger
+```
+
+Conclusion: as p_surv_cond_passenger is greater than p_surv_cond_crew
+then passengers were more likely so survive than crew.
+
+
+MVP - Probability problems
+
+1. If I roll a six-sided dice once, what is the probability of getting a number less than 5?
+
+ANSWER: 2/3
+
+
+
+2. How many outcomes are there in the sample space of an experiment in which we toss three dice?
+
+ANSWER: 6 x 6 x 6 = 216
+
+
+
+3. In an experiment where we roll four dice:
+
+i. how many outcomes are in the event total_equals_5_6_7 (i.e. the total of the four dice equals 5, 6 or 7)?
+
+ANSWER = 34
+```{r}
+rolldie(4) %>% 
+  filter((X1 + X2 + X3 + X4 == 5) |
+         (X1 + X2 + X3 + X4 == 6) |
+         (X1 + X2 + X3 + X4 == 7)
+         )
+```
+ii. what is the probability of this event?
+
+6^4 = 1296 possible outcomes
+
+ANSWER: 34/1296 = 0.0262
+
+
+
+4. Five chairs are placed in a row in a room, along with five people of differing height. The people sit down randomly on the chairs. What is the probability that they sit in order of decreasing height, left to right?
+
+ANSWER: There are 5P5 = 5! = 120 permutations. Only one of these has the people sitting in descending height, so the probability of this event is 1/120 = 0.0083
+
+
+
+5. I roll six dice:
+
+i. what is the probability I see the numbers 6, 5, 4, 3, 2 and 1 in order on the dice, left to right?
+
+ANSWER: There are 6^6 = 46656 possible outcomes, so the probability of this event is 1/46656 
+
+ii. what is the probability I see one each of the numbers 6, 5, 4, 3, 2 and 1 on the dice regardless of order?
+
+ANSWER: 6! ways of getting this result, so probability is 720/46656
+
+
+
+6. If I draw a single card from a 52-card deck, and it is black, what is the probability that its suit is spades? 
+
+ANSWER: P(spades | black) = P(spades & black)/P(black)
+
+                          = (1/4) / (1/2) = 1/2
+
+
+
+7. Eight patients: Alice, Bob, Carmen, Dinesh, Ella, Fergus, Gianna and Henry are waiting to see a doctor, but only five appointment slots are left today.
+
+i. In how many different orders can the doctor see patients today?
+ 
+ANSWER = 8P5 = 8!/3! = 6720
+
+
+ii. What is the probability of Gianna and Danesh both being seen today?
+
+ANSWER: If they are both seen then there are 5 x 4 = 20 permutations for the two slots they take.
+There are then 6P3 = 6!/3! = 120 ways for the other 6 patients to fill the remaining slots.
+So the total number of ways they can both be seen is 20 * 120 = 2400
+Therefore the probability that they will both be seen is 2400/6720 = 0.35714
+
+
+iii. What is the probability of Gianna being seen before Dinesh today?
+
+ANSWER: If both G & D are seen, then the probability of G being seen first is 0.5, so the probability that G will be seen before D is 1200/6720 = 0.178
+ 
+ 
+iv. (harder) Carmen and Henry have now been triaged as high priority and will be seen in the first two available slots, although their order hasn’t yet been determined. In how many different orders can the patients now be seen?
+ 
+ANSWER: There are now 6 patients waiting for the 3 remaining slots. There are 6P3 = 120 ways of filling these slots. The first two slots can be filled in 2 ways, so in total there are 2 * 120 = 240 possible orders.
+
+
+
+8. If order is not significant, how many ways are there to select a 5 student quiz team from a group of 8 students?
+
+ANSWER: 8C5 = 8!/(5! * 3!) = 40320 /(120 * 6) = 56
+
+
+
+9. How would your answer for question 8 change if a team captain had to be selected for each team?
+
+ANSWER: There are 8 possibilities for team captain. Once a captain has been chosen we need to choose 4 students from the remaining 7. 
+So the number of possibilities is 8 x 7C4 = 8 * 7!/(4! * 3!)
+i.e 8 * 5040/(24 * 6) = 280.

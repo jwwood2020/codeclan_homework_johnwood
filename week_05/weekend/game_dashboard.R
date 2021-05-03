@@ -173,6 +173,7 @@ server <- function(input, output, session) {
 
   #----------------------------------------------
   # Output table of all games data
+  # Columns reordered
   output$games_table <- renderDataTable({
     game_sales %>% 
       select(name,
