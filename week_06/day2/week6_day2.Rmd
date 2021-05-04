@@ -90,3 +90,12 @@ samsung %>%
 
 If a variable is normally distributed then expect 68%, 95% and 99.7% of observations within +/- 1, 2, 3 sd from the mean.
 For the phone ratings distribution we see 79%, 92% and 98% of observations within +/- 1, 2, 3 sd from the mean.
+
+EXTENSION
+```{r}
+
+qqnorm(samsung$rating)
+qqline(samsung$rating)
+
+```
+
