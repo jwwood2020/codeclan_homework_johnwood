@@ -224,3 +224,41 @@ Question 3:
 
 alpha = 0.05, p = 0.55
 As p > alpha then we fail to reject the null hypothesis, i.e. there is no evidence to disprove that the mean width of the sampled parts is 145mm.
+
+
+
+EXTENSION
+
+```{r}
+transactions <- read_csv("data/online_retail_subset.csv") %>% 
+  janitor::clean_names()
+```
+
+```{r}
+# Support for Item A = num of transactions involving A / total num of transactions
+# Need to find the number of unique transactions and also the number of transactions involving A
+
+unique_trans <- transactions %>%
+  distinct(invoice_no)
+
+# Get individual supports for each stock_code
+stock_transactions <- transactions %>% 
+  group_by(stock_code) %>% 
+  summarise(num_stock_trans = n()) %>% 
+  mutate(support = num_stock_trans/nrow(unique_trans))
+  
+support_a <- stock_transactions %>% 
+  filter(stock_code == 22469)
+
+support_a
+```
+For rule (A -> B):
+Support = (number of transactions involving A and B)/Total number of transactions
+
+Confidence = P(A and B purchased together)/P(A being purchased) = P(A and B)/P(A)
+
+```{r}
+support_ab <- transactions %>% 
+  filter(stock_code )
+```
+
