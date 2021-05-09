@@ -3,3 +3,89 @@ title: "Week6 Day3 Homework"
 output: html_notebook
 ---
 
+```{r}
+library(tidyverse)
+library(infer)
+library(janitor)
+library(skimr)
+```
+
+Q1
+```{r}
+ames <- read_csv("data/ames.csv") %>%
+  clean_names()
+
+head(ames)
+skim(ames)
+```
+
+Q2
+```{r}
+ames %>% 
+  ggplot() +
+  aes(x = sale_price) +
+  geom_histogram(col = "white")
+```
+The histogram suggests that the data is not normally distributed - it looks to be right-skewed.
+
+Q3
+```{r}
+ames_pop_mean <- ames %>% 
+  summarise(
+    pop_sale_mean = mean(sale_price)
+  )
+```
+Q4
+```{r}
+results <- tibble()
+for (sample_num in 1:1000){
+
+  # get a new 100-observation random sample from ames
+  this_sample <- ames %>%
+    rep_sample_n(size = 100, reps = 1) %>%
+    ungroup() %>%
+    select(sale_price)
+  
+  # create a bootstrap distribution of mean(sale_price)
+  # use 1000 reps
+  this_bootstrap <- this_sample %>%
+    specify(response = sale_price) %>%
+    generate(reps = 1000, type = "bootstrap") %>%
+    calculate(stat = "mean")
+
+  # get 95% CI for this bootstrap distribution
+  this_ci <- this_bootstrap %>%
+    get_ci(level = 0.95, type = "percentile")
+  
+  # prepare new row for results, storing CI bounds
+  this_result <- c(
+    sample_num = sample_num, 
+    lower = this_ci %>% 
+      pull(lower_ci), 
+    upper = this_ci %>%
+      pull(upper_ci)
+  )
+  
+  # add this_result to growing tibble of results
+  results <- results %>%
+    bind_rows(this_result)
+}
+
+```
+
+Q5
+```{r}
+
+results <- results %>% 
+  
+  mutate(popn_param_in_ci = lower <= ames_pop_mean$pop_sale_mean &
+                          ames_pop_mean$pop_sale_mean <= upper)
+
+```
+
+Q6
+```{r}
+results %>%
+  summarise(proportion_CI_containing_popn_param = mean(popn_param_in_ci))
+```
+
