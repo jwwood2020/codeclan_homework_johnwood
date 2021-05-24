@@ -1,0 +1,133 @@
+---
+title: "NHS Borders Cancer Analysis"
+output: html_notebook
+---
+
+```{r}
+# Load libraries
+library(janitor)
+library(here)
+library(tidyverse)
+```
+
+```{r}
+#read data
+incidence_borders <- read_csv(here("data_raw/incidence_hboard.csv")) %>% 
+  clean_names() %>% 
+  filter(hb == "S08000016")
+
+summary_borders <- read_csv(here("data_raw/incidence_5yrsummary_hboard.csv")) %>% 
+  clean_names() %>% 
+  filter(hb == "S08000016")
+
+incidence_scotland <- read_csv(here("data_raw/incidence_scotland.csv")) %>% 
+  clean_names() %>% 
+  rename(hb = country)
+
+summary_scotland <- read_csv(here("data_raw/incidence_5yrsummary_scotland.csv")) %>% 
+  clean_names() %>% 
+  rename(hb = country)
+```
+
+PLAN
+1. Create incidence counts tables for Borders/Scotland - keep only counts
+2. Pivot longer to convert these into Tidy format
+3. Bind these tables
+4. Do same for rates
+
+
+INVESTIGATE
+
+Total counts by year (vs Scotland)
+Counts by sex (vs Scotland)
+Most common cancers in last 5 years (vs Scotland)
+How have these cancers moved in last 25 years
+Rates ?
+Age bands?
+
+
+
+```{r}
+borders_counts <- incidence_borders %>% 
+  select(hb, 
+         cancer_site,
+         sex,
+         year,
+         incidences_all_ages)
+```
+
+```{r}
+scotland_counts <- incidence_scotland %>% 
+  select(hb,
+         cancer_site,
+         sex,
+         year,
+         incidences_all_ages)
+```
+
+```{r}
+borders_counts <- borders_counts %>% 
+  bind_rows(scotland_counts) %>% 
+  mutate(area = case_when(
+    hb == "S08000016" ~ "NHS Borders",
+    hb == "S92000003" ~ "Scotland"
+  ))
+```
+
+
+```{r}
+borders_counts %>% 
+  filter(cancer_site == "All cancer types" & 
+           sex == "All") %>% 
+  ggplot(aes(x = year,
+             y = incidences_all_ages)) +
+  geom_line() +
+  geom_point() +
+  theme_classic() +
+  labs(x = "Year",
+       y = "Number of incidences",
+       title = "Incidences of all cancer types",
+       subtitle = "All age groups, all sexes") +
+  facet_wrap(~ area, scales = "free")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+summary_borders <- summary_borders %>% 
+  pivot_longer(cols = c("incidences_age_under5":"incidences_all_ages"),
+               names_to = "incidence_age_band",
+               values_to = "incidence_count") %>% 
+  pivot_longer(cols = c("incidence_rate_age_under5":"incidence_rate_age85and_over"),
+               names_to = "incidence_rate_age_band",
+               values_to = "incidence_rate")
+
+```
+
+```{r}
+summary_scotland <- summary_scotland %>% 
+  pivot_longer(cols = c("incidences_age_under5":"incidences_all_ages"),
+               names_to = "incidence_age_band",
+               values_to = "incidence_count") %>% 
+  pivot_longer(cols = c("incidence_rate_age_under5":"incidence_rate_age90and_over"),
+               names_to = "incidence_rate_age_band",
+               values_to = "incidence_rate")
+
+```
+
+```{r}
+
+```
+
