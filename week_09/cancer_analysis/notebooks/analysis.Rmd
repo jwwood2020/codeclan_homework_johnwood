@@ -84,46 +84,63 @@ borders_counts %>%
   geom_line() +
   geom_point() +
   theme_classic() +
-  labs(x = "Year",
-       y = "Number of incidences",
-       title = "Incidences of all cancer types",
+  labs(x = "Year of diagnosis",
+       y = "Number of registrations",
+       title = "Number of new cancer registrations",
        subtitle = "All age groups, all sexes") +
   facet_wrap(~ area, scales = "free")
 ```
 
+```{r}
+borders_counts %>% 
+  filter(cancer_site == "All cancer types" & 
+           sex != "All") %>% 
+  ggplot(aes(x = year,
+             y = incidences_all_ages)) +
+  geom_line() +
+  geom_point() +
+  theme_classic() +
+  labs(x = "Year of diagnosis",
+       y = "Number of registrations",
+       title = "Number of new cancer registrations",
+       subtitle = "All age groups, all sexes") +
+  facet_wrap(sex ~ area, scales = "free")
+```
+
+# Female NHS Borders showing cyclical pattern? What is going on here?
 
 
+```{r}
+borders_counts %>% 
+  filter(cancer_site == "All cancer types" & 
+           sex == "All" & year  %in% c("1995", "2019"))
+
+```
 
 
-
-
-
-
-
-
-
+# Percentage change in cancers same across Borders/Scotland = 33%
 
 
 
 ```{r}
-summary_borders <- summary_borders %>% 
+summary_counts_borders <- summary_borders %>% 
+  select(-c("incidence_rate_age_under5":
+             "sir_upper95pc_confidence_interval")) %>% 
   pivot_longer(cols = c("incidences_age_under5":"incidences_all_ages"),
                names_to = "incidence_age_band",
-               values_to = "incidence_count") %>% 
-  pivot_longer(cols = c("incidence_rate_age_under5":"incidence_rate_age85and_over"),
-               names_to = "incidence_rate_age_band",
-               values_to = "incidence_rate")
+               values_to = "incidence_count")
+  
 
 ```
 
 ```{r}
-summary_scotland <- summary_scotland %>% 
+summary_counts_scotland <- summary_scotland %>% 
+   select(-c("incidence_rate_age_under5":
+             "standardised_incidence_ratio_qf")) %>% 
   pivot_longer(cols = c("incidences_age_under5":"incidences_all_ages"),
                names_to = "incidence_age_band",
-               values_to = "incidence_count") %>% 
-  pivot_longer(cols = c("incidence_rate_age_under5":"incidence_rate_age90and_over"),
-               names_to = "incidence_rate_age_band",
-               values_to = "incidence_rate")
+               values_to = "incidence_count")
+  
 
 ```
 
