@@ -14,19 +14,26 @@ library(tidyverse)
 #read data
 incidence_borders <- read_csv(here("data_raw/incidence_hboard.csv")) %>% 
   clean_names() %>% 
+  select(-c("cancer_site_icd10code", "sex_qf")) %>% 
   filter(hb == "S08000016")
 
 summary_borders <- read_csv(here("data_raw/incidence_5yrsummary_hboard.csv")) %>% 
   clean_names() %>% 
+  select(-c("cancer_site_icd10code", "sex_qf"),
+         -c("crude_rate_lower95pc_confidence_interval":"sir_upper95pc_confidence_interval")) %>% 
   filter(hb == "S08000016")
 
 incidence_scotland <- read_csv(here("data_raw/incidence_scotland.csv")) %>% 
   clean_names() %>% 
+   select(-c("cancer_site_icd10code", "sex_qf"),
+          -c("crude_rate_lower95pc_confidence_interval":"standardised_incidence_ratio_qf")) %>% 
   rename(hb = country)
 
 summary_scotland <- read_csv(here("data_raw/incidence_5yrsummary_scotland.csv")) %>% 
   clean_names() %>% 
-  rename(hb = country)
+  rename(hb = country) %>% 
+  select(-c("cancer_site_icd10code", "sex_qf"),
+         -c("crude_rate_lower95pc_confidence_interval":"standardised_incidence_ratio_qf")) 
 ```
 
 PLAN
@@ -80,7 +87,8 @@ borders_counts %>%
   filter(cancer_site == "All cancer types" & 
            sex == "All") %>% 
   ggplot(aes(x = year,
-             y = incidences_all_ages)) +
+             y = incidences_all_ages,
+             colour = area)) +
   geom_line() +
   geom_point() +
   theme_classic() +
@@ -123,28 +131,244 @@ borders_counts %>%
 
 
 ```{r}
-summary_counts_borders <- summary_borders %>% 
-  select(-c("incidence_rate_age_under5":
-             "sir_upper95pc_confidence_interval")) %>% 
-  pivot_longer(cols = c("incidences_age_under5":"incidences_all_ages"),
-               names_to = "incidence_age_band",
-               values_to = "incidence_count")
+summary_counts_borders <- summary_borders %>%
+  select(-c("incidence_rate_age_under5":"crude_rate")) %>% 
+  pivot_longer(
+    cols = c("incidences_age_under5":"incidences_all_ages"),
+    names_to = "incidence_age_band",
+    values_to = "incidence_count"
+  ) %>%
+  mutate(age_band = case_when(
+    incidence_age_band %in% c(
+      "incidences_age_under5",
+      "incidences_age5to9",
+      "incidences_age10to14",
+      "incidences_age15to19"
+    ) ~ "under 19",
+    incidence_age_band %in% c(
+      "incidences_age20to24",
+      "incidences_age25to29",
+      "incidences_age30to34"
+    ) ~ "20 to 34",
+    incidence_age_band %in% c(
+      "incidences_age35to39",
+      "incidences_age40to44",
+      "incidences_age45to49"
+    ) ~ "35 to 49",
+    incidence_age_band %in% c(
+      "incidences_age50to54",
+      "incidences_age55to59",
+      "incidences_age60to64"
+    ) ~ "50 to 64",
+    incidence_age_band %in% c(
+      "incidences_age65to69",
+      "incidences_age70to74",
+      "incidences_age75to79"
+    ) ~ "65 to 79",
+    incidence_age_band %in% c(
+      "incidences_age80to84",
+      "incidences_age85and_over",
+      "incidences_age85to89",
+      "incidences_age90and_over"
+    ) ~ "over 80",
+    incidence_age_band == "incidences_all_ages" ~ "All ages"
+  ))
   
 
 ```
+
+
 
 ```{r}
 summary_counts_scotland <- summary_scotland %>% 
-   select(-c("incidence_rate_age_under5":
-             "standardised_incidence_ratio_qf")) %>% 
+    select(-c("incidence_rate_age_under5":"crude_rate")) %>% 
   pivot_longer(cols = c("incidences_age_under5":"incidences_all_ages"),
                names_to = "incidence_age_band",
-               values_to = "incidence_count")
+               values_to = "incidence_count") %>% 
+  mutate(age_band = case_when(
+    incidence_age_band %in% c(
+      "incidences_age_under5",
+      "incidences_age5to9",
+      "incidences_age10to14",
+      "incidences_age15to19"
+    ) ~ "under 19",
+    incidence_age_band %in% c(
+      "incidences_age20to24",
+      "incidences_age25to29",
+      "incidences_age30to34"
+    ) ~ "20 to 34",
+    incidence_age_band %in% c(
+      "incidences_age35to39",
+      "incidences_age40to44",
+      "incidences_age45to49"
+    ) ~ "35 to 49",
+    incidence_age_band %in% c(
+      "incidences_age50to54",
+      "incidences_age55to59",
+      "incidences_age60to64"
+    ) ~ "50 to 64",
+    incidence_age_band %in% c(
+      "incidences_age65to69",
+      "incidences_age70to74",
+      "incidences_age75to79"
+    ) ~ "65 to 79",
+    incidence_age_band %in% c(
+      "incidences_age80to84",
+      "incidences_age85and_over",
+      "incidences_age85to89",
+      "incidences_age90and_over"
+    ) ~ "over 80",
+    incidence_age_band == "incidences_all_ages" ~ "All ages"
+  ))
   
 
 ```
 
 ```{r}
+summary_counts_borders <- summary_counts_borders %>% 
+  bind_rows(summary_counts_scotland) %>% 
+  mutate(area = case_when(
+                          hb == "S08000016" ~ "NHS Borders",
+                          hb == "S92000003" ~ "Scotland"),
+         age_band = factor(age_band, levels = c("under 19",
+                                                "20 to 34",
+                                                "35 to 49",
+                                                "50 to 64",
+                                                "65 to 79",
+                                                "over 80",
+                                                "All ages")
+                           )
+         )
+```
 
+```{r}
+summary_counts_borders %>% 
+  filter(cancer_site == "All cancer types" &
+           age_band != "All ages" &
+           sex == "All") %>% 
+  ggplot() +
+  aes(x = age_band,
+      y = incidence_count,
+      fill = area) +
+  geom_col() +
+  scale_fill_manual(values = c("NHS Borders" = "forestgreen",
+                               "Scotland" = "blue")) +
+  theme_classic() +
+  labs(x = "Age band",
+       y = "Number of registrations",
+       title = "Number of new cancer registrations by age band") +
+  guides(fill = FALSE) +
+  facet_wrap(~ area, scales = "free")
+```
+
+```{r}
+summary_counts_borders %>% 
+  filter(sex == "All" & 
+           incidence_age_band == "incidences_all_ages" &
+           cancer_site != "All cancer types" &
+           area == "NHS Borders") %>% 
+  slice_max(incidence_count, n = 10) %>% 
+  ggplot() +
+  aes(x = reorder(cancer_site, incidence_count),
+      y = incidence_count) +
+  geom_col() +
+  theme_classic() +
+  theme(axis.title.y = element_blank()) +
+  coord_flip() +
+  labs(y = "Number of registrations",
+       title = "Number of registrations by cancer type"
+       ) +
+  facet_grid(~area, scales = "free")
+  
+```
+
+```{r}
+summary_rates_borders <- summary_borders %>%
+    select(-c("incidences_age_under5":"incidences_all_ages")) %>% 
+  pivot_longer(
+    cols = c("incidence_rate_age_under5":"incidence_rate_age85and_over"),
+    names_to = "incidence_age_band",
+    values_to = "incidence_rate"
+  ) %>%
+  mutate(age_band = case_when(
+    incidence_age_band %in% c(
+      "incidence_rate_age_under5",
+      "incidence_rate_age5to9",
+      "incidence_rate_age10to14",
+      "incidence_rate_age15to19"
+    ) ~ "under 19",
+    incidence_age_band %in% c(
+      "incidence_rate_age20to24",
+      "incidence_rate_age25to29",
+      "incidence_rate_age30to34"
+    ) ~ "20 to 34",
+    incidence_age_band %in% c(
+      "incidence_rate_age35to39",
+      "incidence_rate_age40to44",
+      "incidence_rate_age45to49"
+    ) ~ "35 to 49",
+    incidence_age_band %in% c(
+      "incidence_rate_age50to54",
+      "incidence_rate_age55to59",
+      "incidence_rate_age60to64"
+    ) ~ "50 to 64",
+    incidence_age_band %in% c(
+      "incidence_rate_age65to69",
+      "incidence_rate_age70to74",
+      "incidence_rate_age75to79"
+    ) ~ "65 to 79",
+    incidence_age_band %in% c(
+      "incidence_rate_age80to84",
+      "incidence_rate_age85and_over",
+      "incidence_rate_age85to89",
+      "incidence_rate_age90and_over"
+    ) ~ "over 80",
+    incidence_age_band == "incidences_all_ages" ~ "All ages"
+  ))
+```
+
+```{r}
+summary_rates_scotland <- summary_scotland %>%
+  select(-c("incidences_age_under5":"incidences_all_ages")) %>%
+  pivot_longer(
+    cols = c("incidence_rate_age_under5":"incidence_rate_age90and_over"),
+    names_to = "incidence_age_band",
+    values_to = "incidence_count"
+  ) %>%
+  mutate(age_band = case_when(
+    incidence_age_band %in% c(
+      "incidence_rate_under5",
+      "incidence_rate_age5to9",
+      "incidence_rate_age10to14",
+      "incidence_rate_age15to19"
+    ) ~ "under 19",
+    incidence_age_band %in% c(
+      "incidence_rate_age20to24",
+      "incidence_rate_age25to29",
+      "incidence_rate_age30to34"
+    ) ~ "20 to 34",
+    incidence_age_band %in% c(
+      "incidence_rate_age35to39",
+      "incidence_rate_age40to44",
+      "incidence_rate_age45to49"
+    ) ~ "35 to 49",
+    incidence_age_band %in% c(
+      "incidence_rate_age50to54",
+      "incidence_rate_age55to59",
+      "incidence_rate_age60to64"
+    ) ~ "50 to 64",
+    incidence_age_band %in% c(
+      "incidence_rate_age65to69",
+      "incidence_rate_age70to74",
+      "incidence_rate_age75to79"
+    ) ~ "65 to 79",
+    incidence_age_band %in% c(
+      "incidence_rate_age80to84",
+      "incidence_rate_age85and_over",
+      "incidence_rate_age85to89",
+      "incidence_rate_age90and_over"
+    ) ~ "over 80",
+    incidence_age_band == "incidences_all_ages" ~ "All ages"
+  ))
 ```
 
