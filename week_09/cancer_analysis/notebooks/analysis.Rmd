@@ -19,7 +19,7 @@ Data is sourced from [https://www.opendata.nhs.scot/](https://www.opendata.nhs.s
 >     1995 and 2019. ** 
 > * **The most incidences of cancer occur in the 65 to 79 age group. **
 > * **The most common cancers are those of the skin. **
-> * **Incidence rates do not vary significantly between NHS Borders and the rest of Scotland. **
+> * **Incidence rates for some cancers are higher in NHS Borders than the rest of Scotland. **
 
 
 
@@ -102,7 +102,7 @@ borders_counts %>%
   geom_point() +
   scale_colour_manual(values = c("NHS Borders" = "forestgreen",
                                "Scotland" = "blue")) +
-  theme_classic() +
+  theme_bw() +
   theme(axis.title.y = element_blank()) +
   labs(x = "Year of diagnosis",
        y = "Number of registrations",
@@ -113,6 +113,7 @@ borders_counts %>%
 
 
 ```
+
 From the table below it can be seen that the incidence of cancer in NHS Borders and Scotland
 increased by c33% between 1995 and 2019.
 
@@ -260,7 +261,7 @@ summary_counts_borders %>%
   geom_col() +
   scale_fill_manual(values = c("NHS Borders" = "forestgreen",
                                "Scotland" = "blue")) +
-  theme_classic() +
+  theme_bw() +
   theme(axis.title.y = element_blank()) +
   labs(x = "Age band",
        y = "Number of registrations",
@@ -275,7 +276,7 @@ summary_counts_borders %>%
 #### 3. Most common cancers
 
 The plots below show the most common types of cancer between 2015 and 2019. 
-Three of these are skin cancers. 
+Four of these are skin cancers. 
 ```{r echo = FALSE}
 summary_counts_borders %>% 
   filter(sex == "All" & 
@@ -288,11 +289,11 @@ summary_counts_borders %>%
       y = incidence_count,
       fill = area) +
   geom_col() +
-  theme_classic() +
+  theme_bw() +
   scale_fill_manual(values = c("NHS Borders" = "forestgreen",
                                "Scotland" = "blue")) +
-  theme(axis.title.y = element_blank()) +
-  theme(axis.title.x = element_blank()) +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank()) +
   coord_flip() +
   labs(y = "Number of registrations",
        title = "Registrations by cancer type, 2015 - 2019"
@@ -313,10 +314,11 @@ summary_counts_borders %>%
       y = incidence_count,
       fill = area) +
   geom_col() +
-  theme_classic() +
+  theme_bw() +
   scale_fill_manual(values = c("NHS Borders" = "forestgreen",
                                "Scotland" = "blue")) +
-  theme(axis.title.y = element_blank()) +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank()) +
   coord_flip() +
   labs(y = "Number of registrations",
        title = "Number of registrations by cancer type, 2015 - 2019"
@@ -381,14 +383,21 @@ This suggests that further analysis could be carried out to understand the reaso
 top10_rates_borders %>% 
   filter(sex == "All") %>% 
   ggplot() +
-  geom_linerange(aes(reorder(cancer_site, crude_rate), ymin = 0, ymax = crude_rate, colour = area), 
+  geom_linerange(aes(x = reorder(cancer_site, crude_rate), 
+                     ymin = 0, 
+                     ymax = crude_rate, 
+                     colour = area), 
                    position = position_dodge(width = 1)) +
-  geom_point(aes(x = cancer_site, y = crude_rate, colour = area),
+  geom_point(aes(x = reorder(cancer_site, crude_rate),
+                 y = crude_rate, 
+                 colour = area,
+                 shape = area),
                position = position_dodge(width = 1)) +
   scale_colour_manual(values = c("NHS Borders" = "forestgreen",
                                "Scotland" = "blue")) +
-  theme_classic() +
+  theme_bw() +
   theme(axis.title.y = element_blank()) +
+  guides(shape = FALSE) +
   labs(y = "Crude incidence rate",
        title = "Cancer incidence rates",
        subtitle = "10 most common cancers NHS Borders, 2015 - 2019",
