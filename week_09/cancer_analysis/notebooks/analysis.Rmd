@@ -1,16 +1,37 @@
 ---
 title: "NHS Borders Cancer Analysis"
-output: html_notebook
+output: 
+  html_document:
+    theme: flatly
+    code_folding: hide
 ---
 
-```{r}
+***
+
+This analysis looks at cancer incidence in the NHS Borders region and 
+makes comparisons with data for Scotland as a whole.
+
+Data is sourced from [https://www.opendata.nhs.scot/](https://www.opendata.nhs.scot/)
+
+> ### Summary
+>
+> * **The number of incidences of cancer increased by around 33% across NHS Borders between
+>     1995 and 2019. ** 
+> * **The most incidences of cancer occur in the 65 to 79 age group. **
+> * **The most common cancers are those of the skin. **
+> * **Incidence rates do not vary significantly between NHS Borders and the rest of Scotland. **
+
+
+
+
+```{r include = FALSE}
 # Load libraries
 library(janitor)
 library(here)
 library(tidyverse)
 ```
 
-```{r}
+```{r include = FALSE}
 #read data
 incidence_borders <- read_csv(here("data_raw/incidence_hboard.csv")) %>% 
   clean_names() %>% 
@@ -36,25 +57,8 @@ summary_scotland <- read_csv(here("data_raw/incidence_5yrsummary_scotland.csv"))
          -c("crude_rate_lower95pc_confidence_interval":"standardised_incidence_ratio_qf")) 
 ```
 
-PLAN
-1. Create incidence counts tables for Borders/Scotland - keep only counts
-2. Pivot longer to convert these into Tidy format
-3. Bind these tables
-4. Do same for rates
 
-
-INVESTIGATE
-
-Total counts by year (vs Scotland)
-Counts by sex (vs Scotland)
-Most common cancers in last 5 years (vs Scotland)
-How have these cancers moved in last 25 years
-Rates ?
-Age bands?
-
-
-
-```{r}
+```{r include = FALSE}
 borders_counts <- incidence_borders %>% 
   select(hb, 
          cancer_site,
@@ -63,7 +67,7 @@ borders_counts <- incidence_borders %>%
          incidences_all_ages)
 ```
 
-```{r}
+```{r include = FALSE}
 scotland_counts <- incidence_scotland %>% 
   select(hb,
          cancer_site,
@@ -72,7 +76,7 @@ scotland_counts <- incidence_scotland %>%
          incidences_all_ages)
 ```
 
-```{r}
+```{r include = FALSE}
 borders_counts <- borders_counts %>% 
   bind_rows(scotland_counts) %>% 
   mutate(area = case_when(
@@ -81,8 +85,13 @@ borders_counts <- borders_counts %>%
   ))
 ```
 
+#### 1. Number of cancer registrations
+The number of cancer registrations in NHS Borders has increased between 1995 and 2019.
 
-```{r}
+The plots below show that the pattern of change in NHS Borders is similar to that in 
+Scotland as a whole.
+
+```{r echo = FALSE}
 borders_counts %>% 
   filter(cancer_site == "All cancer types" & 
            sex == "All") %>% 
@@ -91,46 +100,34 @@ borders_counts %>%
              colour = area)) +
   geom_line() +
   geom_point() +
+  scale_colour_manual(values = c("NHS Borders" = "forestgreen",
+                               "Scotland" = "blue")) +
   theme_classic() +
+  theme(axis.title.y = element_blank()) +
   labs(x = "Year of diagnosis",
        y = "Number of registrations",
-       title = "Number of new cancer registrations",
+       title = "New cancer registrations",
        subtitle = "All age groups, all sexes") +
+  guides(colour = FALSE) +
   facet_wrap(~ area, scales = "free")
-```
 
-```{r}
+
+```
+From the table below it can be seen that the incidence of cancer in NHS Borders and Scotland
+increased by c33% between 1995 and 2019.
+
+```{r echo = FALSE}
 borders_counts %>% 
   filter(cancer_site == "All cancer types" & 
-           sex != "All") %>% 
-  ggplot(aes(x = year,
-             y = incidences_all_ages)) +
-  geom_line() +
-  geom_point() +
-  theme_classic() +
-  labs(x = "Year of diagnosis",
-       y = "Number of registrations",
-       title = "Number of new cancer registrations",
-       subtitle = "All age groups, all sexes") +
-  facet_wrap(sex ~ area, scales = "free")
-```
-
-# Female NHS Borders showing cyclical pattern? What is going on here?
-
-
-```{r}
-borders_counts %>% 
-  filter(cancer_site == "All cancer types" & 
-           sex == "All" & year  %in% c("1995", "2019"))
+           sex == "All" & year  %in% c("1995", "2019")) %>% 
+  select(area, cancer_site, year, incidences_all_ages)
 
 ```
 
 
-# Percentage change in cancers same across Borders/Scotland = 33%
 
 
-
-```{r}
+```{r include = FALSE}
 summary_counts_borders <- summary_borders %>%
   select(-c("incidence_rate_age_under5":"crude_rate")) %>% 
   pivot_longer(
@@ -179,7 +176,7 @@ summary_counts_borders <- summary_borders %>%
 
 
 
-```{r}
+```{r include = FALSE}
 summary_counts_scotland <- summary_scotland %>% 
     select(-c("incidence_rate_age_under5":"crude_rate")) %>% 
   pivot_longer(cols = c("incidences_age_under5":"incidences_all_ages"),
@@ -224,7 +221,7 @@ summary_counts_scotland <- summary_scotland %>%
 
 ```
 
-```{r}
+```{r include = FALSE}
 summary_counts_borders <- summary_counts_borders %>% 
   bind_rows(summary_counts_scotland) %>% 
   mutate(area = case_when(
@@ -241,7 +238,17 @@ summary_counts_borders <- summary_counts_borders %>%
          )
 ```
 
-```{r}
+#### 2. Cancer registrations by age band
+
+The plots below show the total number of cancer registrations between 2015 and 2019,
+grouped by age band. New diagnoses are heavily skewed towards older ages (50+),
+with the most occuring in the 65 to 79 group. 
+
+A visual inspection suggests that the age distribution in NHS Borders is very similar
+to Scotland as a whole.
+
+
+```{r echo = FALSE}
 summary_counts_borders %>% 
   filter(cancer_site == "All cancer types" &
            age_band != "All ages" &
@@ -254,14 +261,22 @@ summary_counts_borders %>%
   scale_fill_manual(values = c("NHS Borders" = "forestgreen",
                                "Scotland" = "blue")) +
   theme_classic() +
+  theme(axis.title.y = element_blank()) +
   labs(x = "Age band",
        y = "Number of registrations",
-       title = "Number of new cancer registrations by age band") +
+       title = "New cancer registrations by age band, 2015 - 2019") +
   guides(fill = FALSE) +
   facet_wrap(~ area, scales = "free")
+
+
 ```
 
-```{r}
+
+#### 3. Most common cancers
+
+The plots below show the most common types of cancer between 2015 and 2019. 
+Three of these are skin cancers. 
+```{r echo = FALSE}
 summary_counts_borders %>% 
   filter(sex == "All" & 
            incidence_age_band == "incidences_all_ages" &
@@ -270,105 +285,122 @@ summary_counts_borders %>%
   slice_max(incidence_count, n = 10) %>% 
   ggplot() +
   aes(x = reorder(cancer_site, incidence_count),
-      y = incidence_count) +
+      y = incidence_count,
+      fill = area) +
   geom_col() +
   theme_classic() +
+  scale_fill_manual(values = c("NHS Borders" = "forestgreen",
+                               "Scotland" = "blue")) +
+  theme(axis.title.y = element_blank()) +
+  theme(axis.title.x = element_blank()) +
+  coord_flip() +
+  labs(y = "Number of registrations",
+       title = "Registrations by cancer type, 2015 - 2019"
+       ) +
+  guides(fill = FALSE) +
+  facet_grid(~area, scales = "free")
+```
+
+```{r echo = FALSE}
+summary_counts_borders %>% 
+  filter(sex == "All" & 
+           incidence_age_band == "incidences_all_ages" &
+           cancer_site != "All cancer types" &
+           area == "Scotland") %>% 
+  slice_max(incidence_count, n = 10) %>% 
+  ggplot() +
+  aes(x = reorder(cancer_site, incidence_count),
+      y = incidence_count,
+      fill = area) +
+  geom_col() +
+  theme_classic() +
+  scale_fill_manual(values = c("NHS Borders" = "forestgreen",
+                               "Scotland" = "blue")) +
   theme(axis.title.y = element_blank()) +
   coord_flip() +
   labs(y = "Number of registrations",
-       title = "Number of registrations by cancer type"
+       title = "Number of registrations by cancer type, 2015 - 2019"
        ) +
+  guides(fill = FALSE) +
   facet_grid(~area, scales = "free")
+
+
   
 ```
 
-```{r}
-summary_rates_borders <- summary_borders %>%
-    select(-c("incidences_age_under5":"incidences_all_ages")) %>% 
-  pivot_longer(
-    cols = c("incidence_rate_age_under5":"incidence_rate_age85and_over"),
-    names_to = "incidence_age_band",
-    values_to = "incidence_rate"
-  ) %>%
-  mutate(age_band = case_when(
-    incidence_age_band %in% c(
-      "incidence_rate_age_under5",
-      "incidence_rate_age5to9",
-      "incidence_rate_age10to14",
-      "incidence_rate_age15to19"
-    ) ~ "under 19",
-    incidence_age_band %in% c(
-      "incidence_rate_age20to24",
-      "incidence_rate_age25to29",
-      "incidence_rate_age30to34"
-    ) ~ "20 to 34",
-    incidence_age_band %in% c(
-      "incidence_rate_age35to39",
-      "incidence_rate_age40to44",
-      "incidence_rate_age45to49"
-    ) ~ "35 to 49",
-    incidence_age_band %in% c(
-      "incidence_rate_age50to54",
-      "incidence_rate_age55to59",
-      "incidence_rate_age60to64"
-    ) ~ "50 to 64",
-    incidence_age_band %in% c(
-      "incidence_rate_age65to69",
-      "incidence_rate_age70to74",
-      "incidence_rate_age75to79"
-    ) ~ "65 to 79",
-    incidence_age_band %in% c(
-      "incidence_rate_age80to84",
-      "incidence_rate_age85and_over",
-      "incidence_rate_age85to89",
-      "incidence_rate_age90and_over"
-    ) ~ "over 80",
-    incidence_age_band == "incidences_all_ages" ~ "All ages"
+
+```{r include = FALSE}
+top10_rates_borders <- summary_borders %>% 
+  select(-c("year":"incidence_rate_age85and_over")) %>% 
+  filter(cancer_site  %in% c("Non-melanoma skin cancer",
+                             "Basal cell carcinoma of the skin",
+                             "Trachea, bronchus and lung",
+                             "Colorectal cancer",
+                             "Breast",
+                             "Squamous cell carcinoma of the skin",
+                             "Colon",
+                             "Malignant melanoma of the skin",
+                             "Non-Hodgkin lymphoma",
+                             "Rectum and rectosigmoid junction"
+                             )) 
+  
+```
+
+```{r include = FALSE}
+top10_rates_scotland <- summary_scotland %>% 
+  select(-c("year":"incidence_rate_age90and_over")) %>% 
+  filter(cancer_site  %in% c("Non-melanoma skin cancer",
+                             "Basal cell carcinoma of the skin",
+                             "Trachea, bronchus and lung",
+                             "Colorectal cancer",
+                             "Breast",
+                             "Squamous cell carcinoma of the skin",
+                             "Colon",
+                             "Malignant melanoma of the skin",
+                             "Non-Hodgkin lymphoma",
+                             "Rectum and rectosigmoid junction"
+                             )) 
+```
+
+```{r include = FALSE}
+top10_rates_borders <- top10_rates_borders %>% 
+  bind_rows(top10_rates_scotland) %>% 
+  mutate(area = case_when(
+    hb == "S08000016" ~ "NHS Borders",
+    hb == "S92000003" ~ "Scotland"
   ))
 ```
 
-```{r}
-summary_rates_scotland <- summary_scotland %>%
-  select(-c("incidences_age_under5":"incidences_all_ages")) %>%
-  pivot_longer(
-    cols = c("incidence_rate_age_under5":"incidence_rate_age90and_over"),
-    names_to = "incidence_age_band",
-    values_to = "incidence_count"
-  ) %>%
-  mutate(age_band = case_when(
-    incidence_age_band %in% c(
-      "incidence_rate_under5",
-      "incidence_rate_age5to9",
-      "incidence_rate_age10to14",
-      "incidence_rate_age15to19"
-    ) ~ "under 19",
-    incidence_age_band %in% c(
-      "incidence_rate_age20to24",
-      "incidence_rate_age25to29",
-      "incidence_rate_age30to34"
-    ) ~ "20 to 34",
-    incidence_age_band %in% c(
-      "incidence_rate_age35to39",
-      "incidence_rate_age40to44",
-      "incidence_rate_age45to49"
-    ) ~ "35 to 49",
-    incidence_age_band %in% c(
-      "incidence_rate_age50to54",
-      "incidence_rate_age55to59",
-      "incidence_rate_age60to64"
-    ) ~ "50 to 64",
-    incidence_age_band %in% c(
-      "incidence_rate_age65to69",
-      "incidence_rate_age70to74",
-      "incidence_rate_age75to79"
-    ) ~ "65 to 79",
-    incidence_age_band %in% c(
-      "incidence_rate_age80to84",
-      "incidence_rate_age85and_over",
-      "incidence_rate_age85to89",
-      "incidence_rate_age90and_over"
-    ) ~ "over 80",
-    incidence_age_band == "incidences_all_ages" ~ "All ages"
-  ))
+#### 4. Incidence rates of most common cancers
+
+The plots below show the incidence _rates_ of the most common types of cancer between 2015 and 2019,
+comparing rates between NHS Borders and Scotland. 
+A visual inspection of the comparison shows that rates in NHS Borders are higher for some of these cancers.
+This suggests that further analysis could be carried out to understand the reasons for these differences.
+```{r echo = FALSE}
+top10_rates_borders %>% 
+  filter(sex == "All") %>% 
+  ggplot() +
+  geom_linerange(aes(reorder(cancer_site, crude_rate), ymin = 0, ymax = crude_rate, colour = area), 
+                   position = position_dodge(width = 1)) +
+  geom_point(aes(x = cancer_site, y = crude_rate, colour = area),
+               position = position_dodge(width = 1)) +
+  scale_colour_manual(values = c("NHS Borders" = "forestgreen",
+                               "Scotland" = "blue")) +
+  theme_classic() +
+  theme(axis.title.y = element_blank()) +
+  labs(y = "Crude incidence rate",
+       title = "Cancer incidence rates",
+       subtitle = "10 most common cancers NHS Borders, 2015 - 2019",
+       colour = "Area") +
+    coord_flip()
+
+
 ```
+
+
+
+
+
+
 
