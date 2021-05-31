@@ -1,0 +1,113 @@
+---
+title: "Week 10 Day 1 homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(modelr)
+library(janitor)
+library(broom)
+library(ggfortify)
+```
+
+```{r}
+project <- read_csv("data/project_management.csv")
+```
+
+```{r}
+project %>% 
+  ggplot() +
+  aes(x = estimated_length,
+      y = actual_length) +
+  geom_point()
+```
+
+```{r}
+project %>% 
+  summarise(correlation = cor(estimated_length, actual_length))
+```
+
+Actual and estimated lengths are fairly strongly posisitively correlated, so as estimated length increases we expect actual length to increase.
+
+```{r}
+model_1 <- lm(actual_length ~ estimated_length, data = project)
+model_1
+```
+
+```{r}
+glance_output <- clean_names(glance(model_1))
+glance_output
+```
+
+The model can be interpreted as saying that actual length takes 1.2x estimated length + 1.4.
+The r-squared says that 0.64 of the variation in actual length can be explained by variation in estimated length.
+
+```{r}
+autoplot(model_1)
+```
+
+The p-value of 0 means that we can reject the null hypothesis (i.e. that the coefficient = 0), so can conclude that the relationship is statistically significant.
+
+The diagnostic plots do not suggest that the p-value is unreliable.
+
+
+
+EXTENSION
+
+```{r}
+project %>% 
+  ggplot() +
+  aes(x = estimated_length,
+      y = actual_length) +
+  geom_point() +
+  geom_text(aes(label = 1:nrow(project)),
+            hjust = 0, nudge_x = 0.1)
+```
+
+```{r}
+autoplot(model_1, which = 4)
+```
+
+```{r}
+#remove non-influential point
+project_2 <- project %>% 
+  filter(X1 != 33)
+
+model_2 <- lm(actual_length ~ estimated_length, data = project_2)
+model_2
+```
+
+These are very similar to the coefficients produced in the first model, so this supports classifying the omitted data point as non-influential.
+
+```{r}
+project %>% 
+  ggplot() +
+  aes(x = estimated_length, y= actual_length) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, colour = "red") +
+  geom_smooth(method = "lm", se = FALSE, colour = "blue", data = project_2) 
+```
+
+
+
+```{r}
+#remove influential point
+project_3 <- project %>% 
+  filter(X1 != 5)
+
+model_3 <- lm(actual_length ~ estimated_length, data = project_3)
+model_3
+```
+These coefficients are differnt from those in the first model. This supports classifying the omitted data point as influential.
+
+
+```{r}
+project %>% 
+  ggplot() +
+  aes(x = estimated_length, y= actual_length) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, colour = "red") +
+  geom_smooth(method = "lm", se = FALSE, colour = "blue", data = project_3) 
+```
+
