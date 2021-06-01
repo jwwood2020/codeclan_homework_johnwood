@@ -1,0 +1,146 @@
+---
+title: "Week 10 Day 2 homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(GGally)
+library(ggfortify)
+library(fastDummies)
+```
+
+```{r}
+diamonds <- read_csv("data/diamonds.csv")
+
+glimpse(diamonds)
+```
+
+```{r}
+summary(diamonds)
+```
+
+```{r}
+diamonds %>% 
+  ggpairs(columns = c("carat", "x", "y", "z"),
+          progress = FALSE)
+```
+
+```{r}
+diamonds_trim <- diamonds %>% 
+  select(- c("X1", "x", "y", "z"))
+```
+
+```{r}
+diamonds_trim %>% 
+  ggpairs(progress = FALSE)
+```
+
+```{r}
+diamonds_trim %>% 
+  ggplot() +
+  aes(x = price) +
+  geom_histogram() +
+  facet_wrap(~ color)
+```
+
+```{r}
+diamonds_trim %>% 
+  ggplot() +
+  aes(x = price) +
+  geom_histogram() +
+  facet_wrap(~ clarity)
+```
+
+```{r}
+diamonds_trim %>% 
+  distinct(cut)
+
+
+```
+
+Five possible categories => four dummy variables
+
+```{r}
+diamonds_trim %>% 
+  distinct(color)
+```
+
+Seven possible categories => six dummy variables
+
+```{r}
+diamonds_trim %>% 
+  distinct(clarity)
+```
+
+Eight possible catgories => seven dummy variables
+
+```{r}
+diamonds_dummy <- diamonds_trim %>% 
+  dummy_cols(
+    select_columns = c("cut", "clarity", "color"),
+    remove_first_dummy = TRUE,
+    remove_selected_columns = TRUE
+  )
+```
+
+```{r}
+model_1 <- lm(price ~ carat,
+              data = diamonds_dummy)
+```
+
+```{r}
+autoplot(model_1)
+```
+
+```{r}
+summary(model_1)
+```
+
+Comments: 
+Residuals v Fitted looks broadly ok, although there are outliers
+QQ plot: Observations not falling on the line at either end, suggesting residuals 
+aren't normally distributed
+Scale location: Similar to reiduals vs fitted: broadly ok although with outliers
+p-value suggests statistically significant
+R-squared of 0.85 shows most of variance in price explained by carat
+Price ranges between 326 and 18823, so residual error of 1549 is perhaps a bit large.
+
+```{r}
+model_2 <- lm(price ~ carat + clarity,
+              data = diamonds)
+summary(model_2)
+```
+
+```{r}
+autoplot(model_2)
+```
+
+Comments:
+- p-values show that the coefficients are statistically significant
+- R-squared has increased to 0.89
+- residual error has reduced to 1249
+However:
+- Residuals v fitted shows a shape which suggests the residuals may not be independent
+- Scale-Location looks to show increasing residuals
+- QQ is again not a straight line suggesting residuals aren't normally distributed
+
+
+EXTENSION
+
+```{r}
+model_3 <- lm(price ~ carat + clarity + log(carat):clarity,
+              data = diamonds)
+summary(model_3)
+```
+
+```{r}
+autoplot(model_3)
+```
+
+```{r}
+library(mosaic)
+plotModel(model_3)
+```
+
