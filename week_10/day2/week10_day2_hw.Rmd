@@ -80,8 +80,7 @@ Eight possible catgories => seven dummy variables
 diamonds_dummy <- diamonds_trim %>% 
   dummy_cols(
     select_columns = c("cut", "clarity", "color"),
-    remove_first_dummy = TRUE,
-    remove_selected_columns = TRUE
+    remove_first_dummy = TRUE
   )
 ```
 
@@ -109,7 +108,7 @@ Price ranges between 326 and 18823, so residual error of 1549 is perhaps a bit l
 
 ```{r}
 model_2 <- lm(price ~ carat + clarity,
-              data = diamonds)
+              data = diamonds_dummy)
 summary(model_2)
 ```
 
@@ -131,7 +130,7 @@ EXTENSION
 
 ```{r}
 model_3 <- lm(price ~ carat + clarity + log(carat):clarity,
-              data = diamonds)
+              data = diamonds_dummy)
 summary(model_3)
 ```
 
