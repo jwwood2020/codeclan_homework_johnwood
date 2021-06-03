@@ -1,0 +1,110 @@
+---
+title: "Homework Week 10 Day 3"
+output: html_notebook
+---
+
+
+```{r}
+library(modelr)
+library(GGally)
+library(ggfortify)
+library(relaimpo)
+library(tidyverse)
+```
+
+```{r}
+house_prices <- read_csv("data/kc_house_data.csv")
+
+head(house_prices)
+```
+```{r}
+distinct(house_prices, grade)
+distinct(house_prices, condition)
+```
+
+
+QUESTION 1
+```{r}
+house_prices <- house_prices %>% 
+  select(-c("date", "id", "sqft_living15", "sqft_lot15", "zipcode")) %>% 
+  mutate(
+    waterfront = as.logical(waterfront),
+    renovated = ifelse(yr_renovated == 0, FALSE, TRUE)
+  ) %>% 
+  select(-yr_renovated)
+```
+
+
+QUESTION 2
+```{r}
+alias(lm(price ~ ., data = house_prices))
+```
+
+```{r}
+house_prices <- house_prices %>% 
+  select(-sqft_basement) 
+
+alias(lm(price ~ ., data = house_prices ))
+```
+
+```{r}
+houses_tidy_numeric <- house_prices %>%
+  select_if(is.numeric)
+
+houses_tidy_nonnumeric <- house_prices %>%
+  select_if(function(x) !is.numeric(x))
+
+houses_tidy_nonnumeric$price <- house_prices$price
+```
+
+
+```{r}        
+ggpairs(houses_tidy_numeric, progress = FALSE)
+```
+
+Top variables to investigate first based on correlations:
+ - bathrooms = 0.53
+ - sqft_living = 0.70
+ - grade = 0.67
+ - sqft_above = 0.60
+
+```{r}
+model_1a <- lm(price ~ sqft_living,
+              data = houses_tidy_numeric)
+
+autoplot(model_1a)
+summary(model_1a)
+```
+
+```{r}
+model_1b <- lm(price ~ grade,
+              data = houses_tidy_numeric)
+
+autoplot(model_1b)
+summary(model_1b)
+```
+
+```{r}
+model_1c <- lm(price ~ bathrooms,
+              data = houses_tidy_numeric)
+
+autoplot(model_1c)
+summary(model_1c)
+```
+
+
+```{r}
+ggpairs(houses_tidy_nonnumeric, progress = FALSE)
+```
+```{r}
+model_1d <- lm(price ~ waterfront,
+               data = houses_tidy_nonnumeric)
+autoplot(model_1d)
+summary(model_1d)
+```
+
+
+
+
+
+
