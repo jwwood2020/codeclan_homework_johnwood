@@ -1,0 +1,72 @@
+---
+title: "Week 10 weekend homework"
+output: html_notebook
+---
+
+
+```{r}
+# Load libraries
+library(janitor)
+library(tidyverse)
+library(lubridate)
+library(GGally)
+library(modelr)
+library(ggfortify)
+library(infer)
+```
+
+```{r}
+avocados <- read_csv("data/avocado.csv") %>% 
+clean_names()
+```
+
+```{r}
+glimpse(avocados)
+```
+```{r}
+summary(avocados)
+```
+
+
+
+### Initial thoughts
+x1 is row identifier variable and can be dropped
+date - is month a possible predictor? Or create a season variable?
+total_volume looks to be sum of 4046, 4225. 4770, total_bags so should be able to be dropped:
+ - check this with alias() to ensure no non-standard data
+total_bags looks to be sum of small + large + x_large; again check with alias() before dropping.
+type - check how many distinct
+region - check how many distinct before deciding what to do with it
+
+```{r}
+distinct(avocados, type)
+distinct(avocados, region)
+```
+
+# 54 distinct regions: going to drop this
+
+```{r}
+# Identify any aliased variables
+alias(lm(average_price ~ ., 
+         data = avocados))
+```
+
+# No aliased variables? Seems odd when total_bags, total_volume appear to be made up of other variables
+
+```{r}
+avocados %>% 
+  mutate(bags = total_bags - small_bags - large_bags  - x_large_bags,
+         vol = total_volume - x4046 - x4225 - x4770) %>% 
+ filter(bags != 0)
+```
+Looks like problem is in rounding of number of decimal places. Just going to drop total_volume, total_bags
+
+```{r}
+avocados_trim <- avocados %>% 
+  mutate(month = as.factor(month(date))) %>% 
+  select(-c("x1", "date", "total_volume", "total_bags", "region"))
+
+alias(lm(average_price ~ .,
+         data = avocados_trim))
+```
+
