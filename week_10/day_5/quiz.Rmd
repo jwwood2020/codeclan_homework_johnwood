@@ -1,0 +1,53 @@
+---
+title: "Week 10 weekend homework - quiz"
+output: html_notebook
+---
+
+
+Question 1. I want to predict how well 6 year-olds are going to do in their final school exams. Using the following variables am I likely under-fitting, fitting well or over-fitting? Postcode, gender, reading level, score in maths test, date of birth, family income.
+
+Answer: There is a good range of variables selected, with plausible reasons why they would be related to final test results, so likely to be fitting well.
+
+
+
+Question 2: If I have two models, one with an AIC score of 34,902 and the other with an AIC score of 33,559 which model should I use?
+
+Answer: All else-being equal, then the model with the lower AIC score should be used.
+
+
+
+Question 2: I have two models, the first with: r-squared: 0.44, adjusted r-squared: 0.43. The second with: r-squared: 0.47, adjusted r-squared: 0.41. Which one should I use?
+
+Answer: Although the second model has a higher r-squared it has a lower adjusted r-squared, so the first model should be used (all else being equal). 
+
+
+
+Question 3: I have a model with the following errors: RMSE error on test set: 10.3, RMSE error on training data: 10.4. Do you think this model is over-fitting?
+
+Answer: We would expect the RMSE error on the training data to be lower than on the test set. The reverse is true here so it's unlikely the model is over-fitting.
+
+
+
+Question 4; How does k-fold validation work?
+
+The dataset is split into k different groups. We then in turn use one of the groups as a test set, with the other k-1 sets used to train a model. 
+
+After doing this to produce k models, the average error across the models can then be used to assess model performance.
+
+
+
+Question 5: What is a validation set? When do you need one?
+
+Answer: A validation set is a set of data that isn't used in either training or testing a model. It is used with the selected model after training/testing to assess its performance. It should be used to assess over-fitting to the test set.
+
+
+Question 6: Describe how backwards selection works.
+
+Answer: Backwards selection starts by including all possible explanatory variables, then systematically removing the one that lower r-squared the least when removed until the best model has been identified.
+
+
+
+Question 7: Describe how best subset selection works.
+
+Answer: This looks at all possible sizes of model and looks for all possible combinations of predictors to find the highest r-squared.
+
