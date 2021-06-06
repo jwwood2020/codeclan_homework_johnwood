@@ -13,11 +13,13 @@ library(GGally)
 library(modelr)
 library(ggfortify)
 library(infer)
+library(leaps)
 ```
 
 ```{r}
+# Read in data
 avocados <- read_csv("data/avocado.csv") %>% 
-clean_names()
+  clean_names()
 ```
 
 ```{r}
@@ -27,14 +29,18 @@ glimpse(avocados)
 summary(avocados)
 ```
 
+```{r}
+avocados %>% 
+  summarise(across(.fns = ~sum(is.na(.x))))
+```
 
 
 ### Initial thoughts
 x1 is row identifier variable and can be dropped
 date - is month a possible predictor? Or create a season variable?
-total_volume looks to be sum of 4046, 4225. 4770, total_bags so should be able to be dropped:
- - check this with alias() to ensure no non-standard data
-total_bags looks to be sum of small + large + x_large; again check with alias() before dropping.
+total_bags looks to be sum of small + large + x_large; 
+- check this with alias() to ensure no non-standard data/drop aliases
+total_volume looks to be sum(4046, 4225. 4770, total_bags) - again check with alias() before dropping aliases
 type - check how many distinct
 region - check how many distinct before deciding what to do with it
 
@@ -43,7 +49,7 @@ distinct(avocados, type)
 distinct(avocados, region)
 ```
 
-# 54 distinct regions: going to drop this
+# 54 distinct regions: going to drop this variable
 
 ```{r}
 # Identify any aliased variables
@@ -56,15 +62,27 @@ alias(lm(average_price ~ .,
 ```{r}
 avocados %>% 
   mutate(bags = total_bags - small_bags - large_bags  - x_large_bags,
-         vol = total_volume - x4046 - x4225 - x4770) %>% 
+         vol = total_volume - x4046 - x4225 - x4770 - total_bags) %>% 
  filter(bags != 0)
 ```
-Looks like problem is in rounding of number of decimal places. Just going to drop total_volume, total_bags
+Looks like problem is in rounding of number of decimal places. Just going to drop small/large/x_large, x4046, x4225, x4770 variables.
+I experimented with rounding to 2dp but it still gave the same problem! Will ask about this on Monday.
 
 ```{r}
 avocados_trim <- avocados %>% 
-  mutate(month = as.factor(month(date))) %>% 
-  select(-c("x1", "date", "total_volume", "total_bags", "region"))
+  # Make "quarter" variable based on month
+  mutate(
+    quarter = as.factor(
+      case_when(
+        month(date) %in% 1:3 ~ "Q1",
+        month(date) %in% 4:6 ~ "Q2",
+        month(date) %in% 7:9 ~ "Q3",
+        month(date) %in% 10:12 ~ "Q4"
+      )
+    ),
+    year = as.factor(year)
+    ) %>% 
+  select(-c("x1", "date", "x4046", "x4225", "x4770","small_bags", "large_bags", "x_large_bags", "region"))
 
 alias(lm(average_price ~ .,
          data = avocados_trim))
