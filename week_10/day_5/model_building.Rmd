@@ -14,6 +14,7 @@ library(modelr)
 library(ggfortify)
 library(infer)
 library(leaps)
+library(glmulti)
 ```
 
 ```{r}
@@ -65,7 +66,7 @@ avocados %>%
          vol = total_volume - x4046 - x4225 - x4770 - total_bags) %>% 
  filter(bags != 0)
 ```
-Looks like problem is in rounding of number of decimal places. Just going to drop small/large/x_large, x4046, x4225, x4770 variables.
+Looks like problem is in rounding of number of decimal places. Just going to drop total_bags and total_volume variables.
 I experimented with rounding to 2dp but it still gave the same problem! Will ask about this on Monday.
 
 ```{r}
@@ -82,9 +83,39 @@ avocados_trim <- avocados %>%
     ),
     year = as.factor(year)
     ) %>% 
-  select(-c("x1", "date", "x4046", "x4225", "x4770","small_bags", "large_bags", "x_large_bags", "region"))
+  select(-c("x1", "date", "total_bags", "total_volume", "region"))
 
 alias(lm(average_price ~ .,
          data = avocados_trim))
 ```
 
+```{r}
+avocados_trim %>% 
+  ggpairs(progress = FALSE)
+```
+EXPLANATORY MODEL WORK:
+  
+```{r}
+glmulti_fit <- glmulti(
+  average_price ~ .,
+  data = avocados_trim,
+  level = 2,
+  minsize = 0,
+  maxsize = -1,
+  marginality = TRUE,
+  method = "g",
+  crit = bic,
+  plotty = FALSE,
+  report = TRUE,
+  confsetsize = 100,
+  fitfunction = lm
+)
+```
+```{r}
+summary(glmulti_fit)
+```
+
+
+```{r}
+class(glmulti_fit)
+```
