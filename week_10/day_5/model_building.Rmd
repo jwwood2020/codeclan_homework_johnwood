@@ -94,7 +94,37 @@ avocados_trim %>%
   ggpairs(progress = FALSE)
 ```
 EXPLANATORY MODEL WORK:
-  
+
+
+Use leaps package first
+```{r}
+regsubsets_exhaustive <- regsubsets(average_price ~ ., data = avocados_trim, nvmax = 8, method = "exhaustive")
+```
+
+```{r}
+sum_regsubsets_exhaustive <- summary(regsubsets_exhaustive)
+sum_regsubsets_exhaustive
+```
+
+```{r}
+plot(regsubsets_exhaustive, scale = "adjr2")
+```
+
+```{r}
+plot(regsubsets_exhaustive, scale = "bic")
+```
+
+```{r}
+plot(sum_regsubsets_exhaustive$bic, type = "b")
+```
+
+
+
+
+
+
+
+Now try with ggmulti
 ```{r}
 glmulti_fit <- glmulti(
   average_price ~ .,
@@ -112,10 +142,22 @@ glmulti_fit <- glmulti(
 )
 ```
 ```{r}
-summary(glmulti_fit)
+sum_glmulti_fit <- summary(glmulti_fit)
 ```
 
 
 ```{r}
 class(glmulti_fit)
 ```
+```{r}
+sum_glmulti_fit$bestmodel
+```
+
+```{r}
+glmulti_bestmodel <- lm(paste(sum_glmulti_fit$bestmodel, collapse = " "), data = avocados_trim)
+```
+
+Interpretation: 
+- Best model has an intercept of 1.076 and base values of year = 2015, type = conventional, and quarter = 1
+- Predictors of year, type, quarter, small/large/x_large bag and x4046/x4225
+- Lots of cross-terms: is this model overly complicated?
