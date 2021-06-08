@@ -4,10 +4,13 @@ output: html_notebook
 ---
 
 ```{r}
-library(rpart)
-library(rpart.plot)
+library(rpart) #for creating decision tree with rpart()
+library(rpart.plot) #for plotting decision tree with rpart.plot()
 library(tidyverse)
-library(GGally)
+library(GGally) #for ggpairs()
+library(janitor) #for tabyl()
+library(modelr) #for adding predictions
+library(caret) #for confusion matrix conf_mat()
 ```
 
 
@@ -29,12 +32,12 @@ QUESTION 1
 titanic_trim <- titanic_set %>% 
   filter(is.na(survived) == FALSE) %>% 
   mutate(sex = as.factor(sex),
-         survived = as.factor(survived),
-         pclass = as.factor(pclass),
+         class = factor(pclass, levels = c(3,2,1), labels = c("Lower", "Middle", "Upper")), 
+         survived_flag = factor(survived, levels = c(0,1), labels = c("No", "Yes")),
          embarked = as.factor(embarked),
          age_status = case_when(age <= 16 ~ "child",
                                 age > 16 ~ "adult")) %>% 
-  select(-c("X1", "passenger_id", "age", "name", "ticket", "fare", "cabin")) %>% 
+  select(-c("X1", "passenger_id", "age", "name", "ticket", "fare", "pclass", "cabin", "survived")) %>% 
   drop_na()
 ```
 
@@ -45,7 +48,7 @@ titanic_trim %>%
 QUESTION 2
 ```{r}
 titanic_trim %>% 
-  ggpairs(columns = c("pclass", "sex", "sib_sp", "survived"),
+  ggpairs(columns = c("class", "sex", "sib_sp", "survived_flag"),
           progress = FALSE)
 ```
 
@@ -53,7 +56,80 @@ This shows that there is a strong relationship for survival with sex and pclass.
 
 ```{r}
 titanic_trim %>% 
-  ggpairs(columns = c("parch", "embarked", "age_status", "survived"),
+  ggpairs(columns = c("parch", "embarked", "age_status", "survived_flag"),
           progress = FALSE)
 ```
 This suggests relationships with parch and embarked.
+
+So from these plots I would expect that the following variables could be useful as predictors:
+- sex
+- pclass
+- parch
+- embarked
+
+QUESTION 3: CREATE TEST/TRAINING DATA
+```{r}
+n_data <- nrow(titanic_trim)
+
+test_index <- sample(1:n_data, size = n_data * 0.2)
+
+titanic_test <- slice(titanic_trim, test_index)
+
+titanic_train <- slice(titanic_trim, -test_index)
+```
+
+```{r}
+titanic_train %>% 
+  tabyl(survived_flag)
+```
+
+```{r}
+titanic_test %>% 
+  tabyl(survived_flag)
+```
+
+```{r}
+titanic_trim %>% 
+  tabyl(survived_flag)
+```
+
+Split of 80:20 between train/test to give a reasonable size of dataset for each.
+Tables above show that the sets are fairly well balanced on survival.
+
+
+QUESTION 4: DECISION TREE
+```{r}
+#Fit model
+titanic_fit <- rpart(
+  formula = survived_flag ~ .,
+  data = titanic_train,
+  method = "class"
+)
+```
+
+```{r}
+#Plot decision tree
+rpart.plot(
+  titanic_fit, 
+  yesno = 2,
+  fallen.leaves = TRUE,
+  faclen = 6,
+  type = 4,
+  digits = 4,
+  extra = 101
+)
+
+```
+QUESTION 5
+This decision tree shows that the most important factor is sex: 
+
+QUESTION 6
+```{r}
+titanic_test_pred <- titanic_test %>% 
+  add_predictions(titanic_fit, type = "class")
+```
+
+```{r}
+confusionMatrix(titanic_test_pred$pred, titanic_test_pred$survived_flag)
+```
+
