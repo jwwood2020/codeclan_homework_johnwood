@@ -1,0 +1,59 @@
+---
+title: "Week 11 Day 2 HW"
+output: html_notebook
+---
+
+```{r}
+library(rpart)
+library(rpart.plot)
+library(tidyverse)
+library(GGally)
+```
+
+
+```{r}
+titanic_set <- read_csv('data/titanic_decision_tree_data.csv')
+
+shuffle_index <- sample(1:nrow(titanic_set))
+
+# shuffle the data so class order isn't in order - need this for training/testing split later on 
+titanic_set <- titanic_set[shuffle_index, ]
+```
+
+```{r}
+titanic_set %>% 
+  summarise(across(.fns = ~sum(is.na(.x))))
+```
+QUESTION 1
+```{r}
+titanic_trim <- titanic_set %>% 
+  filter(is.na(survived) == FALSE) %>% 
+  mutate(sex = as.factor(sex),
+         survived = as.factor(survived),
+         pclass = as.factor(pclass),
+         embarked = as.factor(embarked),
+         age_status = case_when(age <= 16 ~ "child",
+                                age > 16 ~ "adult")) %>% 
+  select(-c("X1", "passenger_id", "age", "name", "ticket", "fare", "cabin")) %>% 
+  drop_na()
+```
+
+```{r}
+titanic_trim %>% 
+  summarise(across(.fns = ~sum(is.na(.x))))
+```
+QUESTION 2
+```{r}
+titanic_trim %>% 
+  ggpairs(columns = c("pclass", "sex", "sib_sp", "survived"),
+          progress = FALSE)
+```
+
+This shows that there is a strong relationship for survival with sex and pclass.
+
+```{r}
+titanic_trim %>% 
+  ggpairs(columns = c("parch", "embarked", "age_status", "survived"),
+          progress = FALSE)
+```
+This suggests relationships with parch and embarked.
