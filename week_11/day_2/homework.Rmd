@@ -11,6 +11,7 @@ library(GGally) #for ggpairs()
 library(janitor) #for tabyl()
 library(modelr) #for adding predictions
 library(caret) #for confusion matrix conf_mat()
+library(ranger) #for random forests
 ```
 
 
@@ -135,3 +136,33 @@ confusionMatrix(titanic_test_pred$pred, titanic_test_pred$survived_flag)
 
 
 EXTENSION
+
+```{r}
+library(ranger)
+
+rf_classifier <- ranger(survived_flag ~ ., 
+                        data = titanic_train, 
+                        importance = "impurity", 
+                        num.trees = 1000, 
+                        mtry = 3,
+                        min.node.size = 3)
+
+rf_classifier
+```
+
+```{r}
+importance(rf_classifier)
+```
+```{r}
+summary(rf_classifier)
+```
+
+```{r}
+titanic_test_rf_pred <- titanic_test %>%
+  mutate(pred = predict(rf_classifier, data = titanic_test)$predictions)
+```
+
+```{r}
+confusionMatrix(titanic_test_rf_pred$pred, titanic_test_rf_pred$survived_flag)
+```
+
