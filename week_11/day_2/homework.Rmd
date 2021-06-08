@@ -133,3 +133,5 @@ titanic_test_pred <- titanic_test %>%
 confusionMatrix(titanic_test_pred$pred, titanic_test_pred$survived_flag)
 ```
 
+
+EXTENSION
