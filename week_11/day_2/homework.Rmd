@@ -69,6 +69,11 @@ So from these plots I would expect that the following variables could be useful 
 - embarked
 
 QUESTION 3: CREATE TEST/TRAINING DATA
+
+```{r}
+set.seed(19)
+```
+
 ```{r}
 n_data <- nrow(titanic_trim)
 
@@ -115,21 +120,19 @@ rpart.plot(
   yesno = 2,
   fallen.leaves = TRUE,
   faclen = 6,
-  digits = 4,
-  type = 4
+  digits = 4
 )
 
 ```
 QUESTION 5
 This decision tree shows that the most informative predictive factor is sex, followed by 
-class then embarked.
+class, then other variables after that.
 The decision tree is looking at *survival*.
-- Males have a 19.9% probability of survival, the lowest of all groups
-- Females have a 75.4% probability of survival
-- Females in middle and upper class have the highest probability of survival at 96%
-- Females in lower class have a 42.3% probability of survival
-- Females in lower class with embarked of Q or S have a 35.6% probability of survival
-- Females in lower class with embarked of C have a 71.4% probability of survival
+- Males have a 18.4% probability of survival
+- Adult males have a survival probability of 9.8%, the lowest of all groups
+- Females have a 75% probability of survival
+- Females in middle and upper class have the highest probability of survival at 93.6%
+- Females in lower class have a 47.7% probability of survival
 
 
 
@@ -145,10 +148,10 @@ confusionMatrix(titanic_test_pred$pred, titanic_test_pred$survived_flag)
 
 This summary tells us the following about the predictive power of the model:
 
-- The Accuracy shows that the model is correct 73% of the time
-- The True Positive Rate (sensitivity) is 0.9375, so it correctly identifies as survived (= positive)
+- The Accuracy shows that the model is correct 78% of the time
+- The True Positive Rate (sensitivity) is 0.962, so it correctly identifies as survived (= positive)
 a high number of outcomes
-- The True Negative Rate (specificity) is 0.4677, so it is poor at correctly identifying actual negatives (= died)
+- The True Negative Rate (specificity) is 0.5556, so it is poor at correctly identifying actual negatives (= died)
 
 
 EXTENSION
