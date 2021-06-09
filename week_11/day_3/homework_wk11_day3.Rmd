@@ -1,0 +1,67 @@
+---
+title: "Week 11 Day 3 homework"
+output: html_notebook
+---
+
+```{r}
+library(cluster)
+library(dendextend)
+library(factoextra)
+library(tidyverse)
+library(janitor)
+library(broom)
+```
+
+```{r}
+customer_data <- read_csv("data/mall_customers.csv") %>% 
+  clean_names() %>% 
+  column_to_rownames("customer_id") %>% 
+  rename(annual_income = annual_income_k,
+         spending_score = spending_score_1_100)
+
+
+```
+
+```{r}
+customer_data %>% 
+  ggplot() +
+  aes(x = age, y = annual_income, colour = gender) +
+  geom_point(size = 2) +
+  facet_grid(~ gender)
+```
+
+Comment: 
+For females, looks like there are groupings
+ - between ages 25-40 with annual income between 50k and 75k
+ - between 20 and 35 with annual income less than 50k
+ For males, looks like there are groupings
+  - between 20 and 40 with low annual income
+  - between 25 and 50 with annual income c75k
+
+```{r}
+customer_data %>% 
+  ggplot() +
+  aes(x = annual_income, y = spending_score, colour = gender) +
+  geom_point(size = 2) +
+  facet_grid(~ gender)
+
+```
+Comment:
+For females, looks like there are five groupings radiating out from a central 
+group where nnual_income c50k and spending score c50
+ Other four groups then become low income/low score, low income/high score, 
+ high income/low score, high income/high score
+
+Similar pattern for males although perhaps not as distinct for the lower income groups
+
+
+```{r}
+customer_data %>% 
+  ggplot() +
+  aes(x = age, y = spending_score, colour = gender) +
+  geom_point(size = 2) +
+  facet_grid(~ gender)
+```
+
+Comment:
+For both females and males looks like there is a grouping of under 40s with high spending score
