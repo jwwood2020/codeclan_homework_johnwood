@@ -65,3 +65,70 @@ customer_data %>%
 
 Comment:
 For both females and males looks like there is a grouping of under 40s with high spending score
+
+
+```{r}
+customer_income_spend <- customer_data %>% 
+  select(annual_income, spending_score)
+```
+
+
+```{r}
+fviz_nbclust(customer_income_spend, 
+             kmeans, 
+             method = "wss", 
+             nstart = 25)
+```
+
+Looks like the "elbow' occurs at k = 5
+
+```{r}
+fviz_nbclust(customer_income_spend, 
+             kmeans, 
+             method = "silhouette", 
+             nstart = 25)
+```
+Again, maximum occurs at k = 5
+
+
+```{r}
+fviz_nbclust(customer_income_spend, 
+             kmeans, 
+             method = "gap_stat", 
+             nstart = 25, 
+             k.max = 10)
+```
+Again, looks like optimal number of clusters is 5
+
+
+```{r}
+clusters <- kmeans(customer_income_spend, centers = 5, nstart = 25)
+```
+
+```{r}
+clustered_customer <- augment(clusters, customer_data)
+```
+
+```{r}
+clustered_customer %>% 
+  ggplot() +
+  aes(x = annual_income, y = spending_score, colour = .cluster) +
+  geom_point(size = 2) +
+  labs(title = "Clustered customer data",
+       x = "Annual income (k)",
+       y = "Spending score",
+       colour = "Cluster")
+```
+The clustering seems to be a good fit for this data and confirms the comments made in the initial 
+data exploration.
+
+The clusters could be described as:
+
+1. Higher income / higher spending score
+ - Incomes above 75k and spending scores of c60 and above. This cluster is quite spread out along the income axis, with no upper bound on income.
+
+2. Lower income / lower spending 
+ - Incomes of c40k and below, with spending scores of c45 and below. This cluster is tightly spread along the income axis, as there is a lower bound (0) on income
+ 
+ 3. Middle income/middle spend
+ - This cluster is tightly packed around the 50k income and 50 spending score region.
