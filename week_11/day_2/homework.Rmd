@@ -34,7 +34,7 @@ titanic_trim <- titanic_set %>%
   filter(is.na(survived) == FALSE) %>% 
   mutate(sex = as.factor(sex),
          class = factor(pclass, levels = c(3,2,1), labels = c("Lower", "Middle", "Upper")), 
-         survived_flag = factor(survived, levels = c(0,1), labels = c("No", "Yes")),
+         survived_flag = factor(survived, levels = c(0,1), labels = c("Died", "Survived")),
          embarked = as.factor(embarked),
          age_status = case_when(age <= 16 ~ "child",
                                 age > 16 ~ "adult")) %>% 
@@ -115,14 +115,23 @@ rpart.plot(
   yesno = 2,
   fallen.leaves = TRUE,
   faclen = 6,
-  type = 4,
   digits = 4,
-  extra = 101
+  type = 4
 )
 
 ```
 QUESTION 5
-This decision tree shows that the most important factor is sex: 
+This decision tree shows that the most informative predictive factor is sex, followed by 
+class then embarked.
+The decision tree is looking at *survival*.
+- Males have a 19.9% probability of survival, the lowest of all groups
+- Females have a 75.4% probability of survival
+- Females in middle and upper class have the highest probability of survival at 96%
+- Females in lower class have a 42.3% probability of survival
+- Females in lower class with embarked of Q or S have a 35.6% probability of survival
+- Females in lower class with embarked of C have a 71.4% probability of survival
+
+
 
 QUESTION 6
 ```{r}
@@ -133,6 +142,13 @@ titanic_test_pred <- titanic_test %>%
 ```{r}
 confusionMatrix(titanic_test_pred$pred, titanic_test_pred$survived_flag)
 ```
+
+This summary tells us the following about the predictive power of the model:
+
+- The Accuracy shows that the model is correct 73% of the time
+- The True Positive Rate (sensitivity) is 0.9375, so it correctly identifies as survived (= positive)
+a high number of outcomes
+- The True Negative Rate (specificity) is 0.4677, so it is poor at correctly identifying actual negatives (= died)
 
 
 EXTENSION
@@ -164,5 +180,37 @@ titanic_test_rf_pred <- titanic_test %>%
 
 ```{r}
 confusionMatrix(titanic_test_rf_pred$pred, titanic_test_rf_pred$survived_flag)
+```
+
+
+#CODECLAN PROVIDED CODE
+```{r}
+control <- trainControl(
+  method = "repeatedcv", 
+  number = 5, 
+  repeats = 10
+)
+
+tune_grid = expand.grid(
+  mtry = 1:6,
+  splitrule = c("gini", "extratrees"),
+  min.node.size = c(1, 3, 5)
+)
+```
+
+```{r}
+rf_tune <- train(
+  survived_flag ~ ., 
+  data = titanic_train, 
+  method = "ranger",
+  metric = "Kappa",
+  num.trees = 1000,
+  importance = "impurity",
+  tuneGrid = tune_grid, 
+  trControl = control
+)
+
+plot(rf_tune)
+rf_tune
 ```
 
