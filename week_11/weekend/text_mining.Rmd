@@ -1,0 +1,93 @@
+---
+title: "Week 11 - weekend homework: Text mining"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(janeaustenr)
+```
+
+QUESTION 1
+```{r}
+pride_book <- tibble(
+  id = 1:length(prideprejudice),
+  text = prideprejudice
+) %>% 
+  unnest_tokens(
+    word, text
+  )
+```
+
+```{r}
+pride_book %>% 
+  count(word, sort = TRUE) 
+```
+
+```{r}
+sense_book <- tibble(
+  id = 1:length(sensesensibility),
+  text = sensesensibility
+) %>% 
+  unnest_tokens(
+    word, text
+  )
+```
+
+QUESTION 2
+```{r}
+pride_book %>% 
+  anti_join(stop_words) %>%
+  count(word, sort = TRUE)
+```
+
+
+```{r}
+sense_book %>% 
+  anti_join(stop_words) %>%
+  count(word, sort = TRUE)
+```
+
+
+QUESTION 3
+```{r}
+pride_sentiments <- pride_book %>% 
+  inner_join(get_sentiments("bing")) %>% 
+  count(word, sort = TRUE) %>% 
+  mutate(book = "Pride and Prejudice")
+
+pride_sentiments
+```
+
+```{r}
+sense_sentiments <- sense_book %>% 
+  inner_join(get_sentiments("bing")) %>% 
+  count(word, sort = TRUE) %>% 
+  mutate(book = "Sense and Sensibility")
+
+sense_sentiments
+```
+
+
+EXTENSION
+```{r}
+both_books <- sense_sentiments %>% 
+  bind_rows(pride_sentiments)
+```
+
+```{r}
+both_books %>% 
+  arrange(n) %>% 
+  slice_max(n, n = 20) %>% 
+  ggplot() +
+  aes(x = word, y = n, fill = book, group = book) +
+  geom_col(position = "dodge") +
+  theme_minimal() +
+  labs(x = "Word",
+       y = "Number of occurences",
+       fill = "Book",
+       title = "Jane Austen- most common words") +
+  coord_flip()
+```
+
