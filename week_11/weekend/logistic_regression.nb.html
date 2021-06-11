@@ -316,26 +316,84 @@ The following objects are masked from ‘package:stats’:
  Max.   :0.25269   Max.   :0.440   Max.   :4.000  </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuanVpY2VfZGF0YSAlPiUgXG4gIHN1bW1hcmlzZShhY3Jvc3MoLmZucyA9IH5zdW0oaXMubmEoLngpKSkpXG5gYGAifQ== -->
+<pre class="r"><code>juice_data %&gt;% 
+  summarise(across(.fns = ~sum(is.na(.x))))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MTgsInN1bW1hcnkiOnsiQSB0aWJibGUiOlsiMSB4IDE4Il19fSwicmRmIjoiSDRzSUFBQUFBQUFBQTkxUzNVNkRNQlF1YkhVTU03Zk01NEJFdmRBSE1ENkEwV1IzcEN0Rm1wV1cwSkxwblUrK2VmZ3BzT29UV0FLYzd6di9wK2YxZWZjUTdrS0UwQXpONFpsaEVCRitmM3VKbmhDYSt3QThvSmZOL3hPTWJrSFl3cnRxRmQzNVIvSkZ3MWlTZ21rUU5tM1RIUm1VZFVWem9sbVAxMGZHRGlwTEhEclFSbFVzNGVuZ1ZuSEtFcHBmNHFMbzhTTGxtbzdxRGc3YVVKZU1jaUpHZzRFWmJBS2h2cVlXSzAwRVM1dzBVM0tNMWVHVVoxblBYTFhWUC9ib3VxUW11U3hvcElZb2E4RzFTWDZGd20wb1o3TExTaDFqTzkxbS9QNDNmTTV3M0N1Z2dtaDdCWllNVTJKSW5GWGdEK2prdUN4VWFiaVM0T1EzeTRvZFo2OXlpRTB0bTByU2lPYTFQRVIzOTAyR1A3YkRtOGpiTHFkLzdtTmhPemNtUDdpME80QUYyVFBSZ3h0b3VlMDRoaEZKWTFzQlZzZEdHV0x0UXFxRVpkcm0wT2tIMlE1NGxxUURBQUE9In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["purchase"],"name":[1],"type":["int"],"align":["right"]},{"label":["weekof_purchase"],"name":[2],"type":["int"],"align":["right"]},{"label":["store_id"],"name":[3],"type":["int"],"align":["right"]},{"label":["price_ch"],"name":[4],"type":["int"],"align":["right"]},{"label":["price_mm"],"name":[5],"type":["int"],"align":["right"]},{"label":["disc_ch"],"name":[6],"type":["int"],"align":["right"]},{"label":["disc_mm"],"name":[7],"type":["int"],"align":["right"]},{"label":["special_ch"],"name":[8],"type":["int"],"align":["right"]},{"label":["special_mm"],"name":[9],"type":["int"],"align":["right"]},{"label":["loyal_ch"],"name":[10],"type":["int"],"align":["right"]},{"label":["sale_price_mm"],"name":[11],"type":["int"],"align":["right"]},{"label":["sale_price_ch"],"name":[12],"type":["int"],"align":["right"]},{"label":["price_diff"],"name":[13],"type":["int"],"align":["right"]},{"label":["store7"],"name":[14],"type":["int"],"align":["right"]},{"label":["pct_disc_mm"],"name":[15],"type":["int"],"align":["right"]},{"label":["pct_disc_ch"],"name":[16],"type":["int"],"align":["right"]},{"label":["list_price_diff"],"name":[17],"type":["int"],"align":["right"]},{"label":["store"],"name":[18],"type":["int"],"align":["right"]}],"data":[{"1":"0","2":"0","3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0","12":"0","13":"0","14":"0","15":"0","16":"0","17":"0","18":"0"}],"options":{"columns":{"min":{},"max":[10],"total":[18]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuanVpY2Vfd3JhbmdsZWQgPC0ganVpY2VfZGF0YSAlPiUgXG4gIG11dGF0ZShcbiAgICBwdXJjaGFzZV9tbSA9IGlmZWxzZShwdXJjaGFzZSA9PSBcIk1NXCIsIFwieWVzXCIsIFwibm9cIiksXG4gICAgc3RvcmVfaWQgPSBhc19mYWN0b3Ioc3RvcmVfaWQpLFxuICAgIHNwZWNpYWxfY2ggPSBhc19mYWN0b3Ioc3BlY2lhbF9jaCksXG4gICAgc3BlY2lhbF9tbSA9IGFzX2ZhY3RvcihzcGVjaWFsX21tKSxcbiAgICBzdG9yZTcgPSBhc19mYWN0b3Ioc3RvcmU3KSxcbiAgICBzdG9yZSA9IGFzX2ZhY3RvcihzdG9yZSlcbiAgKSAlPiUgXG4gIHNlbGVjdCgtYyhcInB1cmNoYXNlX21tXCIsIFwid2Vla29mX3B1cmNoYXNlXCIpKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuanVpY2Vfd3JhbmdsZWQgPC0ganVpY2VfZGF0YSAlPiUgXG4gIG11dGF0ZShcbiAgICBwdXJjaGFzZV9tbSA9IGlmZWxzZShwdXJjaGFzZSA9PSBcIk1NXCIsIDEsIDApLFxuICAgIHN0b3JlX2lkID0gYXNfZmFjdG9yKHN0b3JlX2lkKSxcbiAgICBzcGVjaWFsX2NoID0gYXNfZmFjdG9yKHNwZWNpYWxfY2gpLFxuICAgIHNwZWNpYWxfbW0gPSBhc19mYWN0b3Ioc3BlY2lhbF9tbSksXG4gICAgc3RvcmU3ID0gYXNfZmFjdG9yKHN0b3JlNyksXG4gICAgc3RvcmUgPSBhc19mYWN0b3Ioc3RvcmUpXG4gICkgJT4lIFxuICBzZWxlY3QoLWMoXCJwdXJjaGFzZVwiLCBcIndlZWtvZl9wdXJjaGFzZVwiKSlcbmBgYCJ9 -->
 <pre class="r"><code>juice_wrangled &lt;- juice_data %&gt;% 
   mutate(
-    purchase_mm = ifelse(purchase == &quot;MM&quot;, &quot;yes&quot;, &quot;no&quot;),
+    purchase_mm = ifelse(purchase == &quot;MM&quot;, 1, 0),
     store_id = as_factor(store_id),
     special_ch = as_factor(special_ch),
     special_mm = as_factor(special_mm),
     store7 = as_factor(store7),
     store = as_factor(store)
   ) %&gt;% 
-  select(-c(&quot;purchase_mm&quot;, &quot;weekof_purchase&quot;))</code></pre>
+  select(-c(&quot;purchase&quot;, &quot;weekof_purchase&quot;))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5hbGlhcyhwdXJjaGFzZV9tbSB+IC4sIGRhdGEgPSBqdWljZV93cmFuZ2xlZClcbmBgYCJ9 -->
+<pre class="r"><code>
+alias(purchase_mm ~ ., data = juice_wrangled)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTW9kZWwgOlxucHVyY2hhc2VfbW0gfiBzdG9yZV9pZCArIHByaWNlX2NoICsgcHJpY2VfbW0gKyBkaXNjX2NoICsgZGlzY19tbSArIFxuICAgIHNwZWNpYWxfY2ggKyBzcGVjaWFsX21tICsgbG95YWxfY2ggKyBzYWxlX3ByaWNlX21tICsgc2FsZV9wcmljZV9jaCArIFxuICAgIHByaWNlX2RpZmYgKyBzdG9yZTcgKyBwY3RfZGlzY19tbSArIHBjdF9kaXNjX2NoICsgbGlzdF9wcmljZV9kaWZmICsgXG4gICAgc3RvcmVcblxuQ29tcGxldGUgOlxuICAgICAgICAgICAgICAgIChJbnRlcmNlcHQpIHN0b3JlX2lkMiBzdG9yZV9pZDMgc3RvcmVfaWQ0IHN0b3JlX2lkNyBwcmljZV9jaCBwcmljZV9tbSBkaXNjX2NoIGRpc2NfbW0gc3BlY2lhbF9jaDFcbnNhbGVfcHJpY2VfbW0gICAgMCAgICAgICAgICAgMCAgICAgICAgIDAgICAgICAgICAwICAgICAgICAgMCAgICAgICAgIDAgICAgICAgIDEgICAgICAgIDAgICAgICAtMSAgICAgICAwICAgICAgICAgXG5zYWxlX3ByaWNlX2NoICAgIDAgICAgICAgICAgIDAgICAgICAgICAwICAgICAgICAgMCAgICAgICAgIDAgICAgICAgICAxICAgICAgICAwICAgICAgIC0xICAgICAgIDAgICAgICAgMCAgICAgICAgIFxucHJpY2VfZGlmZiAgICAgICAwICAgICAgICAgICAwICAgICAgICAgMCAgICAgICAgIDAgICAgICAgICAwICAgICAgICAtMSAgICAgICAgMSAgICAgICAgMSAgICAgIC0xICAgICAgIDAgICAgICAgICBcbnN0b3JlN1llcyAgICAgICAgMCAgICAgICAgICAgMCAgICAgICAgIDAgICAgICAgICAwICAgICAgICAgMSAgICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAgICAgMCAgICAgICAwICAgICAgICAgXG5saXN0X3ByaWNlX2RpZmYgIDAgICAgICAgICAgIDAgICAgICAgICAwICAgICAgICAgMCAgICAgICAgIDAgICAgICAgIC0xICAgICAgICAxICAgICAgICAwICAgICAgIDAgICAgICAgMCAgICAgICAgIFxuc3RvcmUxICAgICAgICAgICAxICAgICAgICAgIC0xICAgICAgICAtMSAgICAgICAgLTEgICAgICAgIC0xICAgICAgICAgMCAgICAgICAgMCAgICAgICAgMCAgICAgICAwICAgICAgIDAgICAgICAgICBcbnN0b3JlMiAgICAgICAgICAgMCAgICAgICAgICAgMSAgICAgICAgIDAgICAgICAgICAwICAgICAgICAgMCAgICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAgICAgMCAgICAgICAwICAgICAgICAgXG5zdG9yZTMgICAgICAgICAgIDAgICAgICAgICAgIDAgICAgICAgICAxICAgICAgICAgMCAgICAgICAgIDAgICAgICAgICAwICAgICAgICAwICAgICAgICAwICAgICAgIDAgICAgICAgMCAgICAgICAgIFxuc3RvcmU0ICAgICAgICAgICAwICAgICAgICAgICAwICAgICAgICAgMCAgICAgICAgIDEgICAgICAgICAwICAgICAgICAgMCAgICAgICAgMCAgICAgICAgMCAgICAgICAwICAgICAgIDAgICAgICAgICBcbiAgICAgICAgICAgICAgICBzcGVjaWFsX21tMSBsb3lhbF9jaCBwY3RfZGlzY19tbSBwY3RfZGlzY19jaFxuc2FsZV9wcmljZV9tbSAgICAwICAgICAgICAgICAwICAgICAgICAwICAgICAgICAgICAwICAgICAgICAgXG5zYWxlX3ByaWNlX2NoICAgIDAgICAgICAgICAgIDAgICAgICAgIDAgICAgICAgICAgIDAgICAgICAgICBcbnByaWNlX2RpZmYgICAgICAgMCAgICAgICAgICAgMCAgICAgICAgMCAgICAgICAgICAgMCAgICAgICAgIFxuc3RvcmU3WWVzICAgICAgICAwICAgICAgICAgICAwICAgICAgICAwICAgICAgICAgICAwICAgICAgICAgXG5saXN0X3ByaWNlX2RpZmYgIDAgICAgICAgICAgIDAgICAgICAgIDAgICAgICAgICAgIDAgICAgICAgICBcbnN0b3JlMSAgICAgICAgICAgMCAgICAgICAgICAgMCAgICAgICAgMCAgICAgICAgICAgMCAgICAgICAgIFxuc3RvcmUyICAgICAgICAgICAwICAgICAgICAgICAwICAgICAgICAwICAgICAgICAgICAwICAgICAgICAgXG5zdG9yZTMgICAgICAgICAgIDAgICAgICAgICAgIDAgICAgICAgIDAgICAgICAgICAgIDAgICAgICAgICBcbnN0b3JlNCAgICAgICAgICAgMCAgICAgICAgICAgMCAgICAgICAgMCAgICAgICAgICAgMCAgICAgICAgIFxuIn0= -->
+<pre><code>Model :
+purchase_mm ~ store_id + price_ch + price_mm + disc_ch + disc_mm + 
+    special_ch + special_mm + loyal_ch + sale_price_mm + sale_price_ch + 
+    price_diff + store7 + pct_disc_mm + pct_disc_ch + list_price_diff + 
+    store
+
+Complete :
+                (Intercept) store_id2 store_id3 store_id4 store_id7 price_ch price_mm disc_ch disc_mm special_ch1
+sale_price_mm    0           0         0         0         0         0        1        0      -1       0         
+sale_price_ch    0           0         0         0         0         1        0       -1       0       0         
+price_diff       0           0         0         0         0        -1        1        1      -1       0         
+store7Yes        0           0         0         0         1         0        0        0       0       0         
+list_price_diff  0           0         0         0         0        -1        1        0       0       0         
+store1           1          -1        -1        -1        -1         0        0        0       0       0         
+store2           0           1         0         0         0         0        0        0       0       0         
+store3           0           0         1         0         0         0        0        0       0       0         
+store4           0           0         0         1         0         0        0        0       0       0         
+                special_mm1 loyal_ch pct_disc_mm pct_disc_ch
+sale_price_mm    0           0        0           0         
+sale_price_ch    0           0        0           0         
+price_diff       0           0        0           0         
+store7Yes        0           0        0           0         
+list_price_diff  0           0        0           0         
+store1           0           0        0           0         
+store2           0           0        0           0         
+store3           0           0        0           0         
+store4           0           0        0           0         </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuanVpY2Vfd3JhbmdsZWQgPC0ganVpY2Vfd3JhbmdsZWQgJT4lIFxuICBzZWxlY3QoLWMoXCJzYWxlX3ByaWNlX21tXCIsIFwic2FsZV9wcmljZV9jaFwiLCBcInByaWNlX2RpZmZcIikpXG5gYGAifQ== -->
+<pre class="r"><code>juice_wrangled &lt;- juice_wrangled %&gt;% 
+  select(-c(&quot;sale_price_mm&quot;, &quot;sale_price_ch&quot;, &quot;price_diff&quot;))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTG9naXN0aWMgcmVncmVzc2lvbiIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpsaWJyYXJ5KGphbml0b3IpCmBgYAoKYGBge3J9Cmp1aWNlX2RhdGEgPC0gcmVhZF9jc3YoImRhdGEvb3JhbmdlX2p1aWNlLmNzdiIpICU+JSAKICBjbGVhbl9uYW1lcwoKaGVhZChqdWljZV9kYXRhKQpgYGAKCmBgYHtyfQpzdW1tYXJ5KGp1aWNlX2RhdGEpCmBgYAoKYGBge3J9Cmp1aWNlX3dyYW5nbGVkIDwtIGp1aWNlX2RhdGEgJT4lIAogIG11dGF0ZSgKICAgIHB1cmNoYXNlX21tID0gaWZlbHNlKHB1cmNoYXNlID09ICJNTSIsICJ5ZXMiLCAibm8iKSwKICAgIHN0b3JlX2lkID0gYXNfZmFjdG9yKHN0b3JlX2lkKSwKICAgIHNwZWNpYWxfY2ggPSBhc19mYWN0b3Ioc3BlY2lhbF9jaCksCiAgICBzcGVjaWFsX21tID0gYXNfZmFjdG9yKHNwZWNpYWxfbW0pLAogICAgc3RvcmU3ID0gYXNfZmFjdG9yKHN0b3JlNyksCiAgICBzdG9yZSA9IGFzX2ZhY3RvcihzdG9yZSkKICApICU+JSAKICBzZWxlY3QoLWMoInB1cmNoYXNlX21tIiwgIndlZWtvZl9wdXJjaGFzZSIpKQpgYGAKCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTG9naXN0aWMgcmVncmVzc2lvbiIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpsaWJyYXJ5KGphbml0b3IpCmBgYAoKYGBge3J9Cmp1aWNlX2RhdGEgPC0gcmVhZF9jc3YoImRhdGEvb3JhbmdlX2p1aWNlLmNzdiIpICU+JSAKICBjbGVhbl9uYW1lcwoKaGVhZChqdWljZV9kYXRhKQpgYGAKCmBgYHtyfQpzdW1tYXJ5KGp1aWNlX2RhdGEpCmBgYApgYGB7cn0KanVpY2VfZGF0YSAlPiUgCiAgc3VtbWFyaXNlKGFjcm9zcyguZm5zID0gfnN1bShpcy5uYSgueCkpKSkKYGBgCgoKYGBge3J9Cmp1aWNlX3dyYW5nbGVkIDwtIGp1aWNlX2RhdGEgJT4lIAogIG11dGF0ZSgKICAgIHB1cmNoYXNlX21tID0gaWZlbHNlKHB1cmNoYXNlID09ICJNTSIsIDEsIDApLAogICAgc3RvcmVfaWQgPSBhc19mYWN0b3Ioc3RvcmVfaWQpLAogICAgc3BlY2lhbF9jaCA9IGFzX2ZhY3RvcihzcGVjaWFsX2NoKSwKICAgIHNwZWNpYWxfbW0gPSBhc19mYWN0b3Ioc3BlY2lhbF9tbSksCiAgICBzdG9yZTcgPSBhc19mYWN0b3Ioc3RvcmU3KSwKICAgIHN0b3JlID0gYXNfZmFjdG9yKHN0b3JlKQogICkgJT4lIAogIHNlbGVjdCgtYygicHVyY2hhc2UiLCAid2Vla29mX3B1cmNoYXNlIikpCmBgYAoKYGBge3J9CgphbGlhcyhwdXJjaGFzZV9tbSB+IC4sIGRhdGEgPSBqdWljZV93cmFuZ2xlZCkKYGBgCgpgYGB7cn0KanVpY2Vfd3JhbmdsZWQgPC0ganVpY2Vfd3JhbmdsZWQgJT4lIAogIHNlbGVjdCgtYygic2FsZV9wcmljZV9tbSIsICJzYWxlX3ByaWNlX2NoIiwgInByaWNlX2RpZmYiKSkKYGBgCgo=</div>
 
 
 

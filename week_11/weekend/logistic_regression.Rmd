@@ -18,17 +18,32 @@ head(juice_data)
 ```{r}
 summary(juice_data)
 ```
+```{r}
+juice_data %>% 
+  summarise(across(.fns = ~sum(is.na(.x))))
+```
+
 
 ```{r}
 juice_wrangled <- juice_data %>% 
   mutate(
-    purchase_mm = ifelse(purchase == "MM", "yes", "no"),
+    purchase_mm = ifelse(purchase == "MM", 1, 0),
     store_id = as_factor(store_id),
     special_ch = as_factor(special_ch),
     special_mm = as_factor(special_mm),
     store7 = as_factor(store7),
     store = as_factor(store)
   ) %>% 
-  select(-c("purchase_mm", "weekof_purchase"))
+  select(-c("purchase", "weekof_purchase"))
+```
+
+```{r}
+
+alias(purchase_mm ~ ., data = juice_wrangled)
+```
+
+```{r}
+juice_wrangled <- juice_wrangled %>% 
+  select(-c("sale_price_mm", "sale_price_ch", "price_diff"))
 ```
 
