@@ -27,7 +27,7 @@ juice_data %>%
 ```{r}
 juice_wrangled <- juice_data %>% 
   mutate(
-    purchase_mm = ifelse(purchase == "MM", 1, 0),
+    purchase_mm = as_factor(ifelse(purchase == "MM", "y", "n")),
     store_id = as_factor(store_id),
     special_ch = as_factor(special_ch),
     special_mm = as_factor(special_mm),
@@ -45,5 +45,32 @@ alias(purchase_mm ~ ., data = juice_wrangled)
 ```{r}
 juice_wrangled <- juice_wrangled %>% 
   select(-c("sale_price_mm", "sale_price_ch", "price_diff"))
+```
+
+```{r}
+#Create training & test data
+n_data <- nrow(juice_wrangled)
+test_index <- sample(1:n_data, size = n_data * 0.2)
+
+test  <- slice(juice_wrangled, test_index)
+train <- slice(juice_wrangled, -test_index)
+
+```
+
+```{r}
+#Set up glmulti
+glmulti_search_all_mains <- glmulti(
+  purchase_mm ~ ., 
+  data = train,
+  level = 1,               # No interactions considered, main effects only
+  method = "h",            # Exhaustive approach
+  crit = "bic",            # BIC as criteria
+  confsetsize = 10,        # Keep 10 best models
+  plotty = F, 
+  report = T,              # No plots, but provide interim reports
+  fitfunction = "glm",     # glm function
+  family = binomial(link = "logit")) # binomial family for logistic regression
+
+summary(glmulti_search_all_mains)
 ```
 
