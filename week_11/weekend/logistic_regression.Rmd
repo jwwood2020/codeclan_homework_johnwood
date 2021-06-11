@@ -1,0 +1,34 @@
+---
+title: "Logistic regression"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+```{r}
+juice_data <- read_csv("data/orange_juice.csv") %>% 
+  clean_names
+
+head(juice_data)
+```
+
+```{r}
+summary(juice_data)
+```
+
+```{r}
+juice_wrangled <- juice_data %>% 
+  mutate(
+    purchase_mm = ifelse(purchase == "MM", "yes", "no"),
+    store_id = as_factor(store_id),
+    special_ch = as_factor(special_ch),
+    special_mm = as_factor(special_mm),
+    store7 = as_factor(store7),
+    store = as_factor(store)
+  ) %>% 
+  select(-c("purchase_mm", "weekof_purchase"))
+```
+
