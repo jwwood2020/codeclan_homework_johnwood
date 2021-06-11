@@ -6,6 +6,8 @@ output: html_notebook
 ```{r}
 library(tidyverse)
 library(janitor)
+library(glmulti)
+library(broom)
 ```
 
 ```{r}
@@ -44,7 +46,7 @@ alias(purchase_mm ~ ., data = juice_wrangled)
 
 ```{r}
 juice_wrangled <- juice_wrangled %>% 
-  select(-c("sale_price_mm", "sale_price_ch", "price_diff"))
+  select(-c("sale_price_mm", "sale_price_ch", "price_diff", "store7"))
 ```
 
 ```{r}
@@ -67,10 +69,22 @@ glmulti_search_all_mains <- glmulti(
   crit = "bic",            # BIC as criteria
   confsetsize = 10,        # Keep 10 best models
   plotty = F, 
-  report = T,              # No plots, but provide interim reports
+  report = F,              # No plots, but provide interim reports
   fitfunction = "glm",     # glm function
   family = binomial(link = "logit")) # binomial family for logistic regression
+```
 
+
+```{r}
 summary(glmulti_search_all_mains)
+```
+
+```{r}
+mod4_all_preds <- glm(purchase_mm ~ ., 
+                      data = juice_wrangled, 
+                      family = binomial(link = 'logit'))
+clean_names(tidy(mod4_all_preds)) %>%
+  select(term, p_value) %>%
+  filter(p_value > 0.05)
 ```
 

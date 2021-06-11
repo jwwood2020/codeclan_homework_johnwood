@@ -217,33 +217,14 @@ pre code {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
-<pre class="r"><code>library(tidyverse)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGphbml0b3IpXG5saWJyYXJ5KGdsbXVsdGkpXG5gYGAifQ== -->
+<pre class="r"><code>library(tidyverse)
+library(janitor)
+library(glmulti)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmVnaXN0ZXJlZCBTMyBtZXRob2RzIG92ZXJ3cml0dGVuIGJ5ICdkYnBseXInOlxuICBtZXRob2QgICAgICAgICBmcm9tXG4gIHByaW50LnRibF9sYXp5ICAgICBcbiAgcHJpbnQudGJsX3NxbCAgICAgIFxu4pSA4pSAIEF0dGFjaGluZyBwYWNrYWdlcyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAgdGlkeXZlcnNlIDEuMy4wIOKUgOKUgFxu4pyTIGdncGxvdDIgMy4zLjMgICAgIOKckyBwdXJyciAgIDAuMy40XG7inJMgdGliYmxlICAzLjEuMCAgICAg4pyTIGRwbHlyICAgMS4wLjVcbuKckyB0aWR5ciAgIDEuMS4zICAgICDinJMgc3RyaW5nciAxLjQuMFxu4pyTIHJlYWRyICAgMS40LjAgICAgIOKckyBmb3JjYXRzIDAuNS4xXG7ilIDilIAgQ29uZmxpY3RzIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgCB0aWR5dmVyc2VfY29uZmxpY3RzKCkg4pSA4pSAXG54IGRwbHlyOjpmaWx0ZXIoKSBtYXNrcyBzdGF0czo6ZmlsdGVyKClcbnggZHBseXI6OmxhZygpICAgIG1hc2tzIHN0YXRzOjpsYWcoKVxuIn0= -->
-<pre><code>Registered S3 methods overwritten by &#39;dbplyr&#39;:
-  method         from
-  print.tbl_lazy     
-  print.tbl_sql      
-── Attaching packages ─────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
-✓ ggplot2 3.3.3     ✓ purrr   0.3.4
-✓ tibble  3.1.0     ✓ dplyr   1.0.5
-✓ tidyr   1.1.3     ✓ stringr 1.4.0
-✓ readr   1.4.0     ✓ forcats 0.5.1
-── Conflicts ────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-x dplyr::filter() masks stats::filter()
-x dplyr::lag()    masks stats::lag()</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShqYW5pdG9yKVxuYGBgIn0= -->
-<pre class="r"><code>library(janitor)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYamFuaXRvcuKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6c3RhdHPigJk6XG5cbiAgICBjaGlzcS50ZXN0LCBmaXNoZXIudGVzdFxuIn0= -->
-<pre><code>
-Attaching package: ‘janitor’
-
-The following objects are masked from ‘package:stats’:
-
-    chisq.test, fisher.test</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBySmF2YVxuTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBsZWFwc1xuIn0= -->
+<pre><code>Loading required package: rJava
+Loading required package: leaps</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -390,9 +371,9 @@ store4           0           0        0           0         </code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuanVpY2Vfd3JhbmdsZWQgPC0ganVpY2Vfd3JhbmdsZWQgJT4lIFxuICBzZWxlY3QoLWMoXCJzYWxlX3ByaWNlX21tXCIsIFwic2FsZV9wcmljZV9jaFwiLCBcInByaWNlX2RpZmZcIikpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuanVpY2Vfd3JhbmdsZWQgPC0ganVpY2Vfd3JhbmdsZWQgJT4lIFxuICBzZWxlY3QoLWMoXCJzYWxlX3ByaWNlX21tXCIsIFwic2FsZV9wcmljZV9jaFwiLCBcInByaWNlX2RpZmZcIiwgXCJzdG9yZTdcIikpXG5gYGAifQ== -->
 <pre class="r"><code>juice_wrangled &lt;- juice_wrangled %&gt;% 
-  select(-c(&quot;sale_price_mm&quot;, &quot;sale_price_ch&quot;, &quot;price_diff&quot;))</code></pre>
+  select(-c(&quot;sale_price_mm&quot;, &quot;sale_price_ch&quot;, &quot;price_diff&quot;, &quot;store7&quot;))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -411,7 +392,7 @@ train &lt;- slice(juice_wrangled, -test_index)
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1NldCB1cCBnbG11bHRpXG5nbG11bHRpX3NlYXJjaF9hbGxfbWFpbnMgPC0gZ2xtdWx0aShcbiAgcHVyY2hhc2VfbW0gfiAuLCBcbiAgZGF0YSA9IHRyYWluLFxuICBsZXZlbCA9IDEsICAgICAgICAgICAgICAgIyBObyBpbnRlcmFjdGlvbnMgY29uc2lkZXJlZCwgbWFpbiBlZmZlY3RzIG9ubHlcbiAgbWV0aG9kID0gXCJoXCIsICAgICAgICAgICAgIyBFeGhhdXN0aXZlIGFwcHJvYWNoXG4gIGNyaXQgPSBcImJpY1wiLCAgICAgICAgICAgICMgQklDIGFzIGNyaXRlcmlhXG4gIGNvbmZzZXRzaXplID0gMTAsICAgICAgICAjIEtlZXAgMTAgYmVzdCBtb2RlbHNcbiAgcGxvdHR5ID0gRiwgXG4gIHJlcG9ydCA9IFQsICAgICAgICAgICAgICAjIE5vIHBsb3RzLCBidXQgcHJvdmlkZSBpbnRlcmltIHJlcG9ydHNcbiAgZml0ZnVuY3Rpb24gPSBcImdsbVwiLCAgICAgIyBnbG0gZnVuY3Rpb25cbiAgZmFtaWx5ID0gYmlub21pYWwobGluayA9IFwibG9naXRcIikpICMgYmlub21pYWwgZmFtaWx5IGZvciBsb2dpc3RpYyByZWdyZXNzaW9uXG5cbnN1bW1hcnkoZ2xtdWx0aV9zZWFyY2hfYWxsX21haW5zKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1NldCB1cCBnbG11bHRpXG5nbG11bHRpX3NlYXJjaF9hbGxfbWFpbnMgPC0gZ2xtdWx0aShcbiAgcHVyY2hhc2VfbW0gfiAuLCBcbiAgZGF0YSA9IHRyYWluLFxuICBsZXZlbCA9IDEsICAgICAgICAgICAgICAgIyBObyBpbnRlcmFjdGlvbnMgY29uc2lkZXJlZCwgbWFpbiBlZmZlY3RzIG9ubHlcbiAgbWV0aG9kID0gXCJoXCIsICAgICAgICAgICAgIyBFeGhhdXN0aXZlIGFwcHJvYWNoXG4gIGNyaXQgPSBcImJpY1wiLCAgICAgICAgICAgICMgQklDIGFzIGNyaXRlcmlhXG4gIGNvbmZzZXRzaXplID0gMTAsICAgICAgICAjIEtlZXAgMTAgYmVzdCBtb2RlbHNcbiAgcGxvdHR5ID0gRiwgXG4gIHJlcG9ydCA9IEYsICAgICAgICAgICAgICAjIE5vIHBsb3RzLCBidXQgcHJvdmlkZSBpbnRlcmltIHJlcG9ydHNcbiAgZml0ZnVuY3Rpb24gPSBcImdsbVwiLCAgICAgIyBnbG0gZnVuY3Rpb25cbiAgZmFtaWx5ID0gYmlub21pYWwobGluayA9IFwibG9naXRcIikpICMgYmlub21pYWwgZmFtaWx5IGZvciBsb2dpc3RpYyByZWdyZXNzaW9uXG5gYGAifQ== -->
 <pre class="r"><code>#Set up glmulti
 glmulti_search_all_mains &lt;- glmulti(
   purchase_mm ~ ., 
@@ -421,17 +402,79 @@ glmulti_search_all_mains &lt;- glmulti(
   crit = &quot;bic&quot;,            # BIC as criteria
   confsetsize = 10,        # Keep 10 best models
   plotty = F, 
-  report = T,              # No plots, but provide interim reports
+  report = F,              # No plots, but provide interim reports
   fitfunction = &quot;glm&quot;,     # glm function
-  family = binomial(link = &quot;logit&quot;)) # binomial family for logistic regression
-
-summary(glmulti_search_all_mains)</code></pre>
+  family = binomial(link = &quot;logit&quot;)) # binomial family for logistic regression</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShnbG11bHRpX3NlYXJjaF9hbGxfbWFpbnMpXG5gYGAifQ== -->
+<pre class="r"><code>summary(glmulti_search_all_mains)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiJG5hbWVcblsxXSBcImdsbXVsdGkuYW5hbHlzaXNcIlxuXG4kbWV0aG9kXG5bMV0gXCJoXCJcblxuJGZpdHRpbmdcblsxXSBcImdsbVwiXG5cbiRjcml0XG5bMV0gXCJiaWNcIlxuXG4kbGV2ZWxcblsxXSAxXG5cbiRtYXJnaW5hbGl0eVxuWzFdIEZBTFNFXG5cbiRjb25mc2V0c2l6ZVxuWzFdIDEwXG5cbiRiZXN0aWNcblsxXSA3MTIuMDIwN1xuXG4kaWN2YWx1ZXNcbiBbMV0gNzEyLjAyMDcgNzEyLjM2NjYgNzE0LjAwMTQgNzE0LjQxNjAgNzE1LjY0MzkgNzE1LjcwNjIgNzE1Ljk1MTMgNzE2LjA2MjkgNzE3LjkwMzggNzE4LjIyMzJcblxuJGJlc3Rtb2RlbFxuWzFdIFwicHVyY2hhc2VfbW0gfiAxICsgZGlzY19tbSArIGxveWFsX2NoICsgcGN0X2Rpc2NfbW0gKyBwY3RfZGlzY19jaCArIFwiXG5bMl0gXCIgICAgbGlzdF9wcmljZV9kaWZmXCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcblxuJG1vZGVsd2VpZ2h0c1xuIFsxXSAwLjMxMTg1MTAxIDAuMjYyMzE2MTggMC4xMTU4MzM0MiAwLjA5NDE0Njc2IDAuMDUwOTU0MDYgMC4wNDkzOTAyMCAwLjA0MzY5NDQwIDAuMDQxMzIyMzAgMC4wMTY0NjAzNSAwLjAxNDAzMTMyXG5cbiRpbmNsdWRlb2JqZWN0c1xuWzFdIFRSVUVcbiJ9 -->
+<pre><code>$name
+[1] &quot;glmulti.analysis&quot;
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTG9naXN0aWMgcmVncmVzc2lvbiIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpsaWJyYXJ5KGphbml0b3IpCmBgYAoKYGBge3J9Cmp1aWNlX2RhdGEgPC0gcmVhZF9jc3YoImRhdGEvb3JhbmdlX2p1aWNlLmNzdiIpICU+JSAKICBjbGVhbl9uYW1lcwoKaGVhZChqdWljZV9kYXRhKQpgYGAKCmBgYHtyfQpzdW1tYXJ5KGp1aWNlX2RhdGEpCmBgYApgYGB7cn0KanVpY2VfZGF0YSAlPiUgCiAgc3VtbWFyaXNlKGFjcm9zcyguZm5zID0gfnN1bShpcy5uYSgueCkpKSkKYGBgCgoKYGBge3J9Cmp1aWNlX3dyYW5nbGVkIDwtIGp1aWNlX2RhdGEgJT4lIAogIG11dGF0ZSgKICAgIHB1cmNoYXNlX21tID0gYXNfZmFjdG9yKGlmZWxzZShwdXJjaGFzZSA9PSAiTU0iLCAieSIsICJuIikpLAogICAgc3RvcmVfaWQgPSBhc19mYWN0b3Ioc3RvcmVfaWQpLAogICAgc3BlY2lhbF9jaCA9IGFzX2ZhY3RvcihzcGVjaWFsX2NoKSwKICAgIHNwZWNpYWxfbW0gPSBhc19mYWN0b3Ioc3BlY2lhbF9tbSksCiAgICBzdG9yZTcgPSBhc19mYWN0b3Ioc3RvcmU3KSwKICAgIHN0b3JlID0gYXNfZmFjdG9yKHN0b3JlKQogICkgJT4lIAogIHNlbGVjdCgtYygicHVyY2hhc2UiLCAid2Vla29mX3B1cmNoYXNlIikpCmBgYAoKYGBge3J9CgphbGlhcyhwdXJjaGFzZV9tbSB+IC4sIGRhdGEgPSBqdWljZV93cmFuZ2xlZCkKYGBgCgpgYGB7cn0KanVpY2Vfd3JhbmdsZWQgPC0ganVpY2Vfd3JhbmdsZWQgJT4lIAogIHNlbGVjdCgtYygic2FsZV9wcmljZV9tbSIsICJzYWxlX3ByaWNlX2NoIiwgInByaWNlX2RpZmYiKSkKYGBgCgpgYGB7cn0KI0NyZWF0ZSB0cmFpbmluZyAmIHRlc3QgZGF0YQpuX2RhdGEgPC0gbnJvdyhqdWljZV93cmFuZ2xlZCkKdGVzdF9pbmRleCA8LSBzYW1wbGUoMTpuX2RhdGEsIHNpemUgPSBuX2RhdGEgKiAwLjIpCgp0ZXN0ICA8LSBzbGljZShqdWljZV93cmFuZ2xlZCwgdGVzdF9pbmRleCkKdHJhaW4gPC0gc2xpY2UoanVpY2Vfd3JhbmdsZWQsIC10ZXN0X2luZGV4KQoKYGBgCgpgYGB7cn0KI1NldCB1cCBnbG11bHRpCmdsbXVsdGlfc2VhcmNoX2FsbF9tYWlucyA8LSBnbG11bHRpKAogIHB1cmNoYXNlX21tIH4gLiwgCiAgZGF0YSA9IHRyYWluLAogIGxldmVsID0gMSwgICAgICAgICAgICAgICAjIE5vIGludGVyYWN0aW9ucyBjb25zaWRlcmVkLCBtYWluIGVmZmVjdHMgb25seQogIG1ldGhvZCA9ICJoIiwgICAgICAgICAgICAjIEV4aGF1c3RpdmUgYXBwcm9hY2gKICBjcml0ID0gImJpYyIsICAgICAgICAgICAgIyBCSUMgYXMgY3JpdGVyaWEKICBjb25mc2V0c2l6ZSA9IDEwLCAgICAgICAgIyBLZWVwIDEwIGJlc3QgbW9kZWxzCiAgcGxvdHR5ID0gRiwgCiAgcmVwb3J0ID0gVCwgICAgICAgICAgICAgICMgTm8gcGxvdHMsIGJ1dCBwcm92aWRlIGludGVyaW0gcmVwb3J0cwogIGZpdGZ1bmN0aW9uID0gImdsbSIsICAgICAjIGdsbSBmdW5jdGlvbgogIGZhbWlseSA9IGJpbm9taWFsKGxpbmsgPSAibG9naXQiKSkgIyBiaW5vbWlhbCBmYW1pbHkgZm9yIGxvZ2lzdGljIHJlZ3Jlc3Npb24KCnN1bW1hcnkoZ2xtdWx0aV9zZWFyY2hfYWxsX21haW5zKQpgYGAKCg==</div>
+$method
+[1] &quot;h&quot;
+
+$fitting
+[1] &quot;glm&quot;
+
+$crit
+[1] &quot;bic&quot;
+
+$level
+[1] 1
+
+$marginality
+[1] FALSE
+
+$confsetsize
+[1] 10
+
+$bestic
+[1] 712.0207
+
+$icvalues
+ [1] 712.0207 712.3666 714.0014 714.4160 715.6439 715.7062 715.9513 716.0629 717.9038 718.2232
+
+$bestmodel
+[1] &quot;purchase_mm ~ 1 + disc_mm + loyal_ch + pct_disc_mm + pct_disc_ch + &quot;
+[2] &quot;    list_price_diff&quot;                                                
+
+$modelweights
+ [1] 0.31185101 0.26231618 0.11583342 0.09414676 0.05095406 0.04939020 0.04369440 0.04132230 0.01646035 0.01403132
+
+$includeobjects
+[1] TRUE</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kNF9hbGxfcHJlZHMgPC0gZ2xtKHB1cmNoYXNlX21tIH4gLiwgXG4gICAgICAgICAgICAgICAgICAgICAgZGF0YSA9IGp1aWNlX3dyYW5nbGVkLCBcbiAgICAgICAgICAgICAgICAgICAgICBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gJ2xvZ2l0JykpXG5jbGVhbl9uYW1lcyh0aWR5KG1vZDRfYWxsX3ByZWRzKSkgJT4lXG4gIHNlbGVjdCh0ZXJtLCBwX3ZhbHVlKSAlPiVcbiAgZmlsdGVyKHBfdmFsdWUgPiAwLjA1KVxuYGBgIn0= -->
+<pre class="r"><code>mod4_all_preds &lt;- glm(purchase_mm ~ ., 
+                      data = juice_wrangled, 
+                      family = binomial(link = &#39;logit&#39;))
+clean_names(tidy(mod4_all_preds)) %&gt;%
+  select(term, p_value) %&gt;%
+  filter(p_value &gt; 0.05)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6NywibmNvbCI6Miwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyI3IHggMiJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERtaXVCaVlHQmdabUFCUW1aV0lKT0JOVFRFVGRlQ2dZR0ZDY2hoQkFwemd1Z0tvQ0poSUFNa0tBREU3RkFKenVLUy9LTFUrTXdVSTNRQlkzUUJFNmdBZTBwbWNYSjhjZ2FVeTExY2tKcWNtWmdERkRGRUY4ck5oUXNWSkpmRXd6UXlNUENCekxGLzl5cjErb3l5WS9idnBzN2N2dU4zdC8wMXJTczNISjAzMlQrdS9tUVV6eGh1Zi91VHpLNEpLMzdibitmZnhxYXdwdHorSHZ1RmVOM0FaalMvc2VZbDVxWVdRLzNGQkJWa0tVa3R5b1U1dUNDK0xER25OQlZOSDJkUmZya2VUQzh2U0c4RGtQai8vLzlQZEF1U2N4S0xZUmJBQkxsU0Vrc1M5ZEtLZ1BxQnZIOW9XdGp6QzBveTgvT0FtcGhBb2M2S3BwbXhDRTFBb0RRUDVKSVUzZVNNMHJ4c1hVTURrQTFnZVFqZ2hiTFprZGhNRUR1Wi9rUE5Zb1dheFphYWw1Nlpsd3B6ZkU1aVVtb09sTU1IOURMWXgzb0ZSWmw1SlRDdkFFV0w5VXJ5U3hKaDZyaVM4M05nSW1EUE1md0RBQ21KQnVodEFnQUEifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["p_value"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"store_id2","2":"0.9661130"},{"1":"store_id3","2":"0.9557618"},{"1":"store_id4","2":"0.3463642"},{"1":"disc_ch","2":"0.6088801"},{"1":"special_ch1","2":"0.4366524"},{"1":"special_mm1","2":"0.2426670"},{"1":"pct_disc_ch","2":"0.4692269"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[7]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTG9naXN0aWMgcmVncmVzc2lvbiIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpsaWJyYXJ5KGphbml0b3IpCmxpYnJhcnkoZ2xtdWx0aSkKbGlicmFyeShicm9vbSkKYGBgCgpgYGB7cn0KanVpY2VfZGF0YSA8LSByZWFkX2NzdigiZGF0YS9vcmFuZ2VfanVpY2UuY3N2IikgJT4lIAogIGNsZWFuX25hbWVzCgpoZWFkKGp1aWNlX2RhdGEpCmBgYAoKYGBge3J9CnN1bW1hcnkoanVpY2VfZGF0YSkKYGBgCmBgYHtyfQpqdWljZV9kYXRhICU+JSAKICBzdW1tYXJpc2UoYWNyb3NzKC5mbnMgPSB+c3VtKGlzLm5hKC54KSkpKQpgYGAKCgpgYGB7cn0KanVpY2Vfd3JhbmdsZWQgPC0ganVpY2VfZGF0YSAlPiUgCiAgbXV0YXRlKAogICAgcHVyY2hhc2VfbW0gPSBhc19mYWN0b3IoaWZlbHNlKHB1cmNoYXNlID09ICJNTSIsICJ5IiwgIm4iKSksCiAgICBzdG9yZV9pZCA9IGFzX2ZhY3RvcihzdG9yZV9pZCksCiAgICBzcGVjaWFsX2NoID0gYXNfZmFjdG9yKHNwZWNpYWxfY2gpLAogICAgc3BlY2lhbF9tbSA9IGFzX2ZhY3RvcihzcGVjaWFsX21tKSwKICAgIHN0b3JlNyA9IGFzX2ZhY3RvcihzdG9yZTcpLAogICAgc3RvcmUgPSBhc19mYWN0b3Ioc3RvcmUpCiAgKSAlPiUgCiAgc2VsZWN0KC1jKCJwdXJjaGFzZSIsICJ3ZWVrb2ZfcHVyY2hhc2UiKSkKYGBgCgpgYGB7cn0KCmFsaWFzKHB1cmNoYXNlX21tIH4gLiwgZGF0YSA9IGp1aWNlX3dyYW5nbGVkKQpgYGAKCmBgYHtyfQpqdWljZV93cmFuZ2xlZCA8LSBqdWljZV93cmFuZ2xlZCAlPiUgCiAgc2VsZWN0KC1jKCJzYWxlX3ByaWNlX21tIiwgInNhbGVfcHJpY2VfY2giLCAicHJpY2VfZGlmZiIsICJzdG9yZTciKSkKYGBgCgpgYGB7cn0KI0NyZWF0ZSB0cmFpbmluZyAmIHRlc3QgZGF0YQpuX2RhdGEgPC0gbnJvdyhqdWljZV93cmFuZ2xlZCkKdGVzdF9pbmRleCA8LSBzYW1wbGUoMTpuX2RhdGEsIHNpemUgPSBuX2RhdGEgKiAwLjIpCgp0ZXN0ICA8LSBzbGljZShqdWljZV93cmFuZ2xlZCwgdGVzdF9pbmRleCkKdHJhaW4gPC0gc2xpY2UoanVpY2Vfd3JhbmdsZWQsIC10ZXN0X2luZGV4KQoKYGBgCgpgYGB7cn0KI1NldCB1cCBnbG11bHRpCmdsbXVsdGlfc2VhcmNoX2FsbF9tYWlucyA8LSBnbG11bHRpKAogIHB1cmNoYXNlX21tIH4gLiwgCiAgZGF0YSA9IHRyYWluLAogIGxldmVsID0gMSwgICAgICAgICAgICAgICAjIE5vIGludGVyYWN0aW9ucyBjb25zaWRlcmVkLCBtYWluIGVmZmVjdHMgb25seQogIG1ldGhvZCA9ICJoIiwgICAgICAgICAgICAjIEV4aGF1c3RpdmUgYXBwcm9hY2gKICBjcml0ID0gImJpYyIsICAgICAgICAgICAgIyBCSUMgYXMgY3JpdGVyaWEKICBjb25mc2V0c2l6ZSA9IDEwLCAgICAgICAgIyBLZWVwIDEwIGJlc3QgbW9kZWxzCiAgcGxvdHR5ID0gRiwgCiAgcmVwb3J0ID0gRiwgICAgICAgICAgICAgICMgTm8gcGxvdHMsIGJ1dCBwcm92aWRlIGludGVyaW0gcmVwb3J0cwogIGZpdGZ1bmN0aW9uID0gImdsbSIsICAgICAjIGdsbSBmdW5jdGlvbgogIGZhbWlseSA9IGJpbm9taWFsKGxpbmsgPSAibG9naXQiKSkgIyBiaW5vbWlhbCBmYW1pbHkgZm9yIGxvZ2lzdGljIHJlZ3Jlc3Npb24KYGBgCgoKYGBge3J9CnN1bW1hcnkoZ2xtdWx0aV9zZWFyY2hfYWxsX21haW5zKQpgYGAKCmBgYHtyfQptb2Q0X2FsbF9wcmVkcyA8LSBnbG0ocHVyY2hhc2VfbW0gfiAuLCAKICAgICAgICAgICAgICAgICAgICAgIGRhdGEgPSBqdWljZV93cmFuZ2xlZCwgCiAgICAgICAgICAgICAgICAgICAgICBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gJ2xvZ2l0JykpCmNsZWFuX25hbWVzKHRpZHkobW9kNF9hbGxfcHJlZHMpKSAlPiUKICBzZWxlY3QodGVybSwgcF92YWx1ZSkgJT4lCiAgZmlsdGVyKHBfdmFsdWUgPiAwLjA1KQpgYGAKCg==</div>
 
 
 
