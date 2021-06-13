@@ -8,6 +8,8 @@ library(tidyverse)
 library(janitor)
 library(glmulti)
 library(broom)
+library(modelr)
+library(pROC)
 ```
 
 ```{r}
@@ -78,13 +80,49 @@ glmulti_search_all_mains <- glmulti(
 ```{r}
 summary(glmulti_search_all_mains)
 ```
+```{r}
+juice_facs_with_mod1 <- juice_wrangled %>% 
+  add_predictions(glmulti_search_all_mains, type = "response")
+```
+
 
 ```{r}
-mod4_all_preds <- glm(purchase_mm ~ ., 
-                      data = juice_wrangled, 
-                      family = binomial(link = 'logit'))
-clean_names(tidy(mod4_all_preds)) %>%
-  select(term, p_value) %>%
-  filter(p_value > 0.05)
+roc_obj_mod1 <- glmulti_search_all_mains %>% 
+  roc(response = purchase_mm, predictor = pred)
+```
+ 
+
+
+```{r}
+glmulti_search_previous_mains_one_pair <- glmulti(
+  purchase_mm ~ disc_mm + loyal_ch + pct_disc_ch + list_price_diff,
+  data = train,
+  level = 2,               # Interactions considered
+  method = "h",            # Exhaustive approach
+  crit = "bic",            # BIC as criteria
+  confsetsize = 10,        # Keep 10 best models
+  marginality = TRUE,      # consider pairs only if both main effects in model
+  minsize = 6,             # minsize, maxsize and marginality here force 
+  maxsize = 6,             # inclusion of a single pair beyond the five main effects
+  plotty = F, 
+  report = F,              # No plots, but provide interim reports
+  fitfunction = "glm",     # glm function
+  family = binomial(link = "logit")) # binomial family for logistic regression
+
+```
+
+```{r}
+summary(glmulti_search_previous_mains_one_pair)
+```
+
+```{r}
+roc_curve <- ggroc(
+  data = list(
+  no_interactions = glmulti_search_all_mains),
+  pair_interactions = glmulti_search_previous_mains_one_pair,
+                   legacy.axes = TRUE) +
+  coord_fixed()
+
+roc_curve
 ```
 
